@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ariel Pollard — Portfolio</title>
+<meta name="description" content="Portfolio of Ariel Pollard: experience, projects, publications, leadership, and more." />
+<meta property="og:title" content="Ariel Pollard — Portfolio" />
+<meta property="og:description" content="Experience, projects, publications, leadership, and more." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- Reusable placeholder-image icon -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="16" rx="3"/>
+    <circle cx="9" cy="10" r="1.8"/>
+    <path d="M21 16l-5-5-8 8"/>
+  </symbol>
+</svg>
+
+<header class="nav" id="top">
+  <div class="nav__inner">
+    <a href="#top" class="nav__logo"><span class="nav__prompt">&gt;_</span> ariel.pollard</a>
+    <button class="nav__toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav__menu" id="nav-menu" aria-label="Sections">
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#courses">Courses</a>
+      <a href="#publications">Publications</a>
+      <a href="#leadership">Leadership</a>
+      <a href="#volunteer">Volunteer</a>
+      <a href="#fun">Fun Facts</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="blob blob--pink" aria-hidden="true"></div>
+    <div class="blob blob--cyan" aria-hidden="true"></div>
+    <div class="blob blob--lime" aria-hidden="true"></div>
+
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">// hello, world</p>
+        <h1 id="hero-heading">Hi, I'm <span class="grad">Ariel</span>.<br>I build things that <span class="underline-wiggle">matter</span>.</h1>
+        <p class="deck">Placeholder tagline goes here — one or two sentences on who you are, what you make, and what you're excited about right now.</p>
+        <div class="hero__cta">
+          <a href="#projects" class="btn btn--primary">See my work</a>
+          <a href="#contact" class="btn btn--ghost">Say hello</a>
+        </div>
+        <ul class="hero__pills" aria-label="Quick facts">
+          <li class="pill pill--violet">📍 Placeholder City</li>
+          <li class="pill pill--cyan">🎓 Placeholder School '27</li>
+          <li class="pill pill--pink">⚡ Placeholder interest</li>
+        </ul>
+      </div>
+
+      <div class="hero__visual">
+        <div class="avatar ph ph--circle" role="img" aria-label="Placeholder portrait">
+          <svg class="ph__icon"><use href="#ph-icon"/></svg>
+        </div>
+        <div class="terminal" aria-label="Terminal card">
+          <div class="terminal__bar"><span></span><span></span><span></span><em>ariel — zsh</em></div>
+          <pre class="terminal__body"><code><span class="t-prompt">~ $</span> whoami
+<span class="t-out">placeholder-human · builder · learner</span>
+<span class="t-prompt">~ $</span> cat interests.txt
+<span class="t-out">[ "placeholder", "placeholder", "placeholder" ]</span>
+<span class="t-prompt">~ $</span> ./status
+<span class="t-out t-ok">✓ currently building something new</span>
+<span class="t-prompt">~ $</span> <span class="t-cursor"></span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ EXPERIENCE ═══════════ -->
+  <section class="section" id="experience" aria-labelledby="experience-heading">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">// 01 — experience</p>
+      <h2 id="experience-heading">Where I've <span class="grad">worked</span></h2>
+    </header>
+
+    <ol class="timeline">
+      <li class="timeline__item" data-reveal>
+        <div class="timeline__logo ph ph--square" role="img" aria-label="Placeholder company logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="timeline__body card">
+          <div class="card__meta"><span class="mono">2026 — present</span><span class="pill pill--lime">Current</span></div>
+          <h3>Placeholder Role Title</h3>
+          <p class="card__org">Placeholder Organization · Placeholder City</p>
+          <ul class="bullets">
+            <li>Placeholder bullet describing what you did and the impact it had.</li>
+            <li>Placeholder bullet with a number in it, like "grew X by 40%."</li>
+            <li>Placeholder bullet about a skill or tool you picked up.</li>
+          </ul>
+          <ul class="chips" aria-label="Skills used"><li>Placeholder</li><li>Skill</li><li>Tool</li></ul>
+        </div>
+      </li>
+
+      <li class="timeline__item" data-reveal>
+        <div class="timeline__logo ph ph--square" role="img" aria-label="Placeholder company logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="timeline__body card">
+          <div class="card__meta"><span class="mono">Summer 2025</span></div>
+          <h3>Placeholder Role Title</h3>
+          <p class="card__org">Placeholder Organization · Remote</p>
+          <ul class="bullets">
+            <li>Placeholder bullet describing what you did and the impact it had.</li>
+            <li>Placeholder bullet about what you learned.</li>
+          </ul>
+          <ul class="chips" aria-label="Skills used"><li>Placeholder</li><li>Skill</li></ul>
+        </div>
+      </li>
+
+      <li class="timeline__item" data-reveal>
+        <div class="timeline__logo ph ph--square" role="img" aria-label="Placeholder company logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="timeline__body card">
+          <div class="card__meta"><span class="mono">2024 — 2025</span></div>
+          <h3>Placeholder Role Title</h3>
+          <p class="card__org">Placeholder Organization · Placeholder City</p>
+          <ul class="bullets">
+            <li>Placeholder bullet describing what you did and the impact it had.</li>
+          </ul>
+          <ul class="chips" aria-label="Skills used"><li>Placeholder</li><li>Skill</li><li>Tool</li></ul>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ═══════════ PROJECTS ═══════════ -->
+  <section class="section section--tint" id="projects" aria-labelledby="projects-heading">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">// 02 — projects</p>
+      <h2 id="projects-heading">Things I've <span class="grad">built</span></h2>
+      <p class="section__deck">Placeholder intro for the projects section. A sentence on what ties them together.</p>
+    </header>
+
+    <div class="bento">
+      <article class="card card--project card--featured" data-reveal>
+        <div class="ph ph--wide" role="img" aria-label="Placeholder project screenshot"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="pill pill--pink">Featured</span><span class="mono">2026</span></div>
+          <h3>Placeholder Featured Project</h3>
+          <p>Placeholder description — two or three sentences on the problem, what you built, and the result. This card is bigger, so it can hold a little more.</p>
+          <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Placeholder</li></ul>
+          <div class="card__links"><a href="#" class="link-arrow">Live site</a><a href="#" class="link-arrow">Source</a></div>
+        </div>
+      </article>
+
+      <article class="card card--project" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder project screenshot"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2025</span></div>
+          <h3>Placeholder Project</h3>
+          <p>Placeholder description in one or two sentences.</p>
+          <ul class="chips"><li>Python</li><li>Placeholder</li></ul>
+          <div class="card__links"><a href="#" class="link-arrow">Source</a></div>
+        </div>
+      </article>
+
+      <article class="card card--project" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder project screenshot"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2025</span></div>
+          <h3>Placeholder Project</h3>
+          <p>Placeholder description in one or two sentences.</p>
+          <ul class="chips"><li>Hardware</li><li>Placeholder</li></ul>
+          <div class="card__links"><a href="#" class="link-arrow">Demo</a></div>
+        </div>
+      </article>
+
+      <article class="card card--project" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder project screenshot"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2024</span></div>
+          <h3>Placeholder Project</h3>
+          <p>Placeholder description in one or two sentences.</p>
+          <ul class="chips"><li>Placeholder</li></ul>
+          <div class="card__links"><a href="#" class="link-arrow">Read more</a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════ COURSES / CERTIFICATES ═══════════ -->
+  <section class="section" id="courses" aria-labelledby="courses-heading">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">// 03 — courses &amp; certificates</p>
+      <h2 id="courses-heading">What I've <span class="grad">studied</span></h2>
+    </header>
+
+    <div class="grid grid--3">
+      <article class="card card--cert" data-reveal>
+        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder certificate badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div>
+          <span class="pill pill--violet">Certificate</span>
+          <h3>Placeholder Certificate Name</h3>
+          <p class="card__org">Placeholder Provider · 2026</p>
+          <p>One line on what it covered.</p>
+        </div>
+      </article>
+      <article class="card card--cert" data-reveal>
+        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder course badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div>
+          <span class="pill pill--cyan">Course</span>
+          <h3>Placeholder Course Name</h3>
+          <p class="card__org">Placeholder Institution · 2025</p>
+          <p>One line on what it covered.</p>
+        </div>
+      </article>
+      <article class="card card--cert" data-reveal>
+        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder course badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div>
+          <span class="pill pill--cyan">Course</span>
+          <h3>Placeholder Course Name</h3>
+          <p class="card__org">Placeholder Institution · 2025</p>
+          <p>One line on what it covered.</p>
+        </div>
+      </article>
+      <article class="card card--cert" data-reveal>
+        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder certificate badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div>
+          <span class="pill pill--violet">Certificate</span>
+          <h3>Placeholder Certificate Name</h3>
+          <p class="card__org">Placeholder Provider · 2024</p>
+          <p>One line on what it covered.</p>
+        </div>
+      </article>
+      <article class="card card--cert" data-reveal>
+        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder course badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div>
+          <span class="pill pill--lime">Workshop</span>
+          <h3>Placeholder Workshop Name</h3>
+          <p class="card__org">Placeholder Host · 2024</p>
+          <p>One line on what it covered.</p>
+        </div>
+      </article>
+      <article class="card card--cert" data-reveal>
+        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder course badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div>
+          <span class="pill pill--cyan">Course</span>
+          <h3>Placeholder Course Name</h3>
+          <p class="card__org">Placeholder Institution · 2024</p>
+          <p>One line on what it covered.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════ PUBLICATIONS ═══════════ -->
+  <section class="section section--tint" id="publications" aria-labelledby="publications-heading">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">// 04 — publications</p>
+      <h2 id="publications-heading">Things I've <span class="grad">written</span></h2>
+    </header>
+
+    <ul class="pubs">
+      <li class="card card--pub" data-reveal>
+        <div class="ph ph--portrait" role="img" aria-label="Placeholder publication cover"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="pill pill--pink">Article</span><span class="mono">May 2026</span></div>
+          <h3>Placeholder Headline That Is Fairly Long and Wraps</h3>
+          <p class="card__org">Placeholder Publication Name</p>
+          <p>Placeholder one-line summary of the piece and why it mattered.</p>
+          <a href="#" class="link-arrow">Read it</a>
+        </div>
+      </li>
+      <li class="card card--pub" data-reveal>
+        <div class="ph ph--portrait" role="img" aria-label="Placeholder publication cover"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="pill pill--violet">Essay</span><span class="mono">Jan 2026</span></div>
+          <h3>Placeholder Headline</h3>
+          <p class="card__org">Placeholder Publication Name</p>
+          <p>Placeholder one-line summary of the piece.</p>
+          <a href="#" class="link-arrow">Read it</a>
+        </div>
+      </li>
+      <li class="card card--pub" data-reveal>
+        <div class="ph ph--portrait" role="img" aria-label="Placeholder publication cover"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="pill pill--cyan">Research</span><span class="mono">Sep 2025</span></div>
+          <h3>Placeholder Paper Title</h3>
+          <p class="card__org">Placeholder Journal or Conference</p>
+          <p>Placeholder one-line summary of the piece.</p>
+          <a href="#" class="link-arrow">Read it</a>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ═══════════ LEADERSHIP ═══════════ -->
+  <section class="section" id="leadership" aria-labelledby="leadership-heading">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">// 05 — leadership</p>
+      <h2 id="leadership-heading">Teams I've <span class="grad">led</span></h2>
+    </header>
+
+    <div class="grid grid--3">
+      <article class="card card--photo" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2025 — present</span></div>
+          <h3>Placeholder Leadership Role</h3>
+          <p class="card__org">Placeholder Organization</p>
+          <p>Placeholder sentence on the team, its size, and what you steered it toward.</p>
+        </div>
+      </article>
+      <article class="card card--photo" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2024 — present</span></div>
+          <h3>Placeholder Leadership Role</h3>
+          <p class="card__org">Placeholder Organization</p>
+          <p>Placeholder sentence on the team, its size, and what you steered it toward.</p>
+        </div>
+      </article>
+      <article class="card card--photo" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2023 — 2024</span></div>
+          <h3>Placeholder Leadership Role</h3>
+          <p class="card__org">Placeholder Organization</p>
+          <p>Placeholder sentence on the team, its size, and what you steered it toward.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════ VOLUNTEER ═══════════ -->
+  <section class="section section--tint" id="volunteer" aria-labelledby="volunteer-heading">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">// 06 — volunteer</p>
+      <h2 id="volunteer-heading">Giving <span class="grad">back</span></h2>
+    </header>
+
+    <div class="grid grid--2">
+      <article class="card card--volunteer" data-reveal>
+        <div class="ph ph--square" role="img" aria-label="Placeholder organization logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2022 — present</span><span class="pill pill--lime">Ongoing</span></div>
+          <h3>Placeholder Volunteer Role</h3>
+          <p class="card__org">Placeholder Organization</p>
+          <p>Placeholder sentence on who you helped and how often. Add a number if you have one.</p>
+        </div>
+      </article>
+      <article class="card card--volunteer" data-reveal>
+        <div class="ph ph--square" role="img" aria-label="Placeholder organization logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2024</span></div>
+          <h3>Placeholder Volunteer Role</h3>
+          <p class="card__org">Placeholder Organization</p>
+          <p>Placeholder sentence on who you helped and how often.</p>
+        </div>
+      </article>
+      <article class="card card--volunteer" data-reveal>
+        <div class="ph ph--square" role="img" aria-label="Placeholder organization logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2023</span></div>
+          <h3>Placeholder Volunteer Role</h3>
+          <p class="card__org">Placeholder Organization</p>
+          <p>Placeholder sentence on who you helped and how often.</p>
+        </div>
+      </article>
+      <article class="card card--volunteer" data-reveal>
+        <div class="ph ph--square" role="img" aria-label="Placeholder organization logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2023</span></div>
+          <h3>Placeholder Volunteer Role</h3>
+          <p class="card__org">Placeholder Organization</p>
+          <p>Placeholder sentence on who you helped and how often.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════ FUN FACTS ═══════════ -->
+  <section class="section" id="fun" aria-labelledby="fun-heading">
+    <header class="section__head" data-reveal>
+      <p class="eyebrow">// 07 — fun facts</p>
+      <h2 id="fun-heading">Off the <span class="grad">clock</span></h2>
+    </header>
+
+    <ul class="facts">
+      <li class="fact fact--pink" data-reveal><span class="fact__emoji" aria-hidden="true">🎧</span><p>Placeholder fun fact about a hobby.</p></li>
+      <li class="fact fact--cyan" data-reveal><span class="fact__emoji" aria-hidden="true">🌮</span><p>Placeholder fun fact about food.</p></li>
+      <li class="fact fact--lime" data-reveal><span class="fact__emoji" aria-hidden="true">🏔️</span><p>Placeholder fun fact about a place.</p></li>
+      <li class="fact fact--yellow" data-reveal><span class="fact__emoji" aria-hidden="true">📚</span><p>Placeholder fun fact about a book.</p></li>
+      <li class="fact fact--violet" data-reveal><span class="fact__emoji" aria-hidden="true">🤖</span><p>Placeholder fun fact about a gadget.</p></li>
+      <li class="fact fact--pink" data-reveal><span class="fact__emoji" aria-hidden="true">🐾</span><p>Placeholder fun fact about a pet.</p></li>
+      <li class="fact fact--cyan" data-reveal><span class="fact__emoji" aria-hidden="true">🎮</span><p>Placeholder fun fact about a game.</p></li>
+      <li class="fact fact--lime" data-reveal><span class="fact__emoji" aria-hidden="true">☕</span><p>Placeholder fun fact about a routine.</p></li>
+    </ul>
+  </section>
+
+  <!-- ═══════════ CONTACT ═══════════ -->
+  <section class="section contact" id="contact" aria-labelledby="contact-heading">
+    <div class="contact__card" data-reveal>
+      <p class="eyebrow eyebrow--light">// get in touch</p>
+      <h2 id="contact-heading">Let's build something.</h2>
+      <p>Placeholder line inviting people to reach out — collaborations, questions, or just to say hi.</p>
+      <div class="contact__links">
+        <a href="mailto:hello@example.com" class="btn btn--light">hello@example.com</a>
+        <a href="#" class="btn btn--outline-light">GitHub</a>
+        <a href="#" class="btn btn--outline-light">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p><span class="mono">© 2026 Ariel Pollard</span> · Built by hand with HTML, CSS, and a little JavaScript.</p>
+  <a href="#top" class="footer__top">Back to top ↑</a>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
