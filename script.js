@@ -113,4 +113,53 @@
     }, { rootMargin: "-40% 0px -55% 0px" });
     sections.forEach(function (s) { spy.observe(s); });
   }
+
+  // ── Click sparks ──────────────────────────────────────────────────────────
+  // Every button (and button-style link) throws a burst of sparks from the
+  // spot that was clicked. Skipped under reduced motion.
+  const SPARK_TARGETS = ".btn, button, .link-arrow, .more summary";
+  const SPARK_COUNT = 24;
+  const SPARK_COLORS = ["--pink", "--violet", "--cyan", "--yellow", "--lime"];
+  const SPARK_MIN_DISTANCE = 40;
+  const SPARK_MAX_DISTANCE = 130;
+  const SPARK_MIN_SIZE = 7;
+  const SPARK_MAX_SIZE = 16;
+
+  function sparkOrigin(event, target) {
+    const isKeyboard = event.detail === 0 || (event.clientX === 0 && event.clientY === 0);
+    if (!isKeyboard) return { x: event.clientX, y: event.clientY };
+    const box = target.getBoundingClientRect();
+    return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+  }
+
+  function makeSpark(origin, index) {
+    const spark = document.createElement("span");
+    const angle = (Math.PI * 2 * index) / SPARK_COUNT + Math.random() * 0.6;
+    const distance = SPARK_MIN_DISTANCE + Math.random() * (SPARK_MAX_DISTANCE - SPARK_MIN_DISTANCE);
+    const size = SPARK_MIN_SIZE + Math.random() * (SPARK_MAX_SIZE - SPARK_MIN_SIZE);
+    const color = SPARK_COLORS[index % SPARK_COLORS.length];
+    spark.className = "spark";
+    spark.style.left = origin.x + "px";
+    spark.style.top = origin.y + "px";
+    spark.style.width = spark.style.height = size.toFixed(1) + "px";
+    spark.style.background = "var(" + color + ")";
+    spark.style.setProperty("--dx", (Math.cos(angle) * distance).toFixed(0) + "px");
+    spark.style.setProperty("--dy", (Math.sin(angle) * distance).toFixed(0) + "px");
+    spark.style.setProperty("--spin", (Math.random() * 360).toFixed(0) + "deg");
+    spark.addEventListener("animationend", function () { spark.remove(); });
+    return spark;
+  }
+
+  function emitSparks(origin) {
+    const burst = document.createDocumentFragment();
+    for (let i = 0; i < SPARK_COUNT; i += 1) burst.appendChild(makeSpark(origin, i));
+    document.body.appendChild(burst);
+  }
+
+  if (!REDUCED_MOTION) {
+    document.addEventListener("click", function (event) {
+      const target = event.target.closest(SPARK_TARGETS);
+      if (target) emitSparks(sparkOrigin(event, target));
+    });
+  }
 })();
