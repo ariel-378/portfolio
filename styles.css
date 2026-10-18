@@ -318,6 +318,7 @@ img, svg { display: block; max-width: 100%; }
 
 /* ── Cards ───────────────────────────────────────────────────────────────── */
 .card {
+  position: relative; /* lets the peeking dog paint behind cards in DOM order */
   background: var(--card);
   border: 2px solid var(--ink);
   border-radius: var(--radius);
@@ -623,3 +624,30 @@ body.has-splash .hero__copy > *, body.has-splash .terminal { animation-play-stat
   100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 24px)) scale(0.7) rotate(var(--spin)); }
 }
 
+/* ── Peeking dog (peek.js) ──────────────────────────────────────────────── */
+/* A clipped window pressed against one edge of a card; the dog slides up
+   inside it, so the card appears to hide the rest of the dog. peek.js rotates
+   the window to match the edge (sideways for left/right, upside down for the
+   bottom) and inserts it first inside the card's container, so neighbouring
+   cards (all positioned, z-index auto) paint over it. */
+.bento, .grid, .pubs { position: relative; }
+.peek {
+  position: absolute;
+  width: 112px; height: 86px;
+  overflow: hidden; pointer-events: none;
+  transform-origin: 50% 50%;
+}
+.peek__dog {
+  display: block;
+  translate: 0 100%;
+  transform-origin: 50% 100%;
+}
+.peek__dog--up {
+  animation:
+    peek-up 450ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+    peek-wobble 900ms ease-in-out 450ms infinite alternate;
+}
+.peek__dog--down { animation: peek-down 320ms ease-in forwards; }
+@keyframes peek-up { from { translate: 0 100%; } to { translate: 0 4%; } }
+@keyframes peek-down { from { translate: 0 4%; } to { translate: 0 100%; } }
+@keyframes peek-wobble { from { rotate: -5deg; } to { rotate: 5deg; } }
