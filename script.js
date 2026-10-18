@@ -1,33 +1,10 @@
-// Small page behaviors: the mobile nav, scroll reveals, and the active nav
-// link. Everything degrades cleanly if JavaScript is off.
+// Small page behaviors: scroll reveals, the typed terminal, the runaway
+// portrait, and click sparks. Everything degrades cleanly if JavaScript is off.
 (function () {
   "use strict";
 
   const REVEAL_STAGGER_MS = 70;
   const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  // ── Mobile nav ────────────────────────────────────────────────────────────
-  const toggle = document.getElementById("nav-toggle");
-  const menu = document.getElementById("nav-menu");
-
-  function setMenu(isOpen) {
-    toggle.setAttribute("aria-expanded", String(isOpen));
-    toggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
-    menu.classList.toggle("is-open", isOpen);
-    document.body.classList.toggle("nav-open", isOpen);
-  }
-
-  if (toggle && menu) {
-    toggle.addEventListener("click", function () {
-      setMenu(toggle.getAttribute("aria-expanded") !== "true");
-    });
-    menu.addEventListener("click", function (e) {
-      if (e.target.closest("a")) setMenu(false);
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") setMenu(false);
-    });
-  }
 
   // ── Scroll reveal ─────────────────────────────────────────────────────────
   // Elements marked data-reveal fade up once when they enter the viewport.
@@ -84,6 +61,14 @@
     }
     // Park the cursor back on the final prompt line.
     lines[lines.length - 1].appendChild(cursor);
+    terminalReady();
+  }
+
+  // shell.js takes over the prompt once the intro transcript is finished.
+  function terminalReady() {
+    if (!terminal) return;
+    terminal.dataset.ready = "1";
+    document.dispatchEvent(new CustomEvent("terminal-ready"));
   }
 
   // Wait for the intro splash, if one is running, so the typing isn't missed.
@@ -93,25 +78,150 @@
     } else {
       playTerminal();
     }
+  } else {
+    terminalReady();
   }
 
-  // ── Active nav link ───────────────────────────────────────────────────────
-  const links = Array.from(document.querySelectorAll(".nav__menu a[href^='#']"));
-  const sections = links
-    .map(function (a) { return document.querySelector(a.getAttribute("href")); })
-    .filter(Boolean);
+  // ── Avatar dodge ──────────────────────────────────────────────────────────
+  // The hero portrait refuses to be touched. When the mouse gets close it
+  // detaches from the layout, flees across the viewport (over any section),
+  // slides along the edges when cornered, and dashes to the far side if it
+  // gets trapped. It springs home once the cursor backs off. Mouse-only;
+  // skipped under reduced motion.
+  const avatar = document.querySelector(".avatar");
+  const SAFE_DISTANCE = 200;     // px between cursor and portrait centre it insists on
+  const TRAPPED_DISTANCE = 110;  // px: closer than this after clamping means it is cornered
+  const SPRING_STIFFNESS = 0.12;
+  const SPRING_DAMPING = 0.72;
+  const TILT_PER_PX = 0.5;       // deg of lean per px of horizontal speed
+  const TILT_MAX = 16;
+  const EDGE_MARGIN = 12;
+  const REST_EPSILON = 0.15;
+  const FLEEING_Z_INDEX = 60;
+  const GLOW_DISTANCE = 600;     // px from home at which the outline is at full blaze
+  const GLOW_MAX_BLUR = 40;      // px
+  const RING_HUE_HOME = 263;     // violet
+  const RING_HUE_FAR = 330;      // hot pink
+  const RING_LIGHT_HOME = 58;    // %
+  const RING_LIGHT_FAR = 86;     // %
+  const canHover = window.matchMedia("(hover: hover)").matches;
 
-  if (sections.length && "IntersectionObserver" in window) {
-    const spy = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        const id = "#" + entry.target.id;
-        links.forEach(function (a) {
-          a.classList.toggle("is-active", a.getAttribute("href") === id);
-        });
-      });
-    }, { rootMargin: "-40% 0px -55% 0px" });
-    sections.forEach(function (s) { spy.observe(s); });
+  if (avatar && canHover && !REDUCED_MOTION) {
+    const pos = { x: 0, y: 0 };     // offset from home, in px
+    const vel = { x: 0, y: 0 };
+    const cursor = { x: -9999, y: -9999, inside: false };
+    const placeholder = document.createElement("div");
+    let isDetached = false;
+    let frame = null;
+
+    function detach() {
+      const box = avatar.getBoundingClientRect();
+      placeholder.style.width = box.width + "px";
+      placeholder.style.height = box.height + "px";
+      avatar.parentNode.insertBefore(placeholder, avatar);
+      avatar.style.position = "fixed";
+      avatar.style.width = box.width + "px";
+      avatar.style.margin = "0";
+      avatar.style.zIndex = String(FLEEING_Z_INDEX);
+      isDetached = true;
+    }
+
+    function reattach() {
+      placeholder.remove();
+      ["position", "width", "margin", "zIndex", "left", "top"].forEach(function (p) { avatar.style[p] = ""; });
+      isDetached = false;
+    }
+
+    function homeBox() { return (isDetached ? placeholder : avatar).getBoundingClientRect(); }
+
+    // Where the portrait wants to be this frame: clear of the cursor and on screen.
+    function desiredOffset(home) {
+      const centerX = home.left + home.width / 2 + pos.x;
+      const centerY = home.top + home.height / 2 + pos.y;
+      const awayX = centerX - cursor.x;
+      const awayY = centerY - cursor.y;
+      const distance = Math.hypot(awayX, awayY) || 1;
+      if (!cursor.inside || distance > SAFE_DISTANCE) return { x: 0, y: 0, fleeing: false };
+      const push = SAFE_DISTANCE - distance;
+      return { x: pos.x + (awayX / distance) * push, y: pos.y + (awayY / distance) * push, fleeing: true };
+    }
+
+    function clampToViewport(offset, home) {
+      const minX = EDGE_MARGIN - home.left;
+      const maxX = window.innerWidth - EDGE_MARGIN - home.width - home.left;
+      const minY = EDGE_MARGIN - home.top;
+      const maxY = window.innerHeight - EDGE_MARGIN - home.height - home.top;
+      return { x: Math.min(maxX, Math.max(minX, offset.x)), y: Math.min(maxY, Math.max(minY, offset.y)) };
+    }
+
+    // Cornered: jump to the spot on screen farthest from the cursor.
+    function escapeHatch(home) {
+      const farX = cursor.x < window.innerWidth / 2 ? window.innerWidth - EDGE_MARGIN - home.width : EDGE_MARGIN;
+      const farY = cursor.y < window.innerHeight / 2 ? window.innerHeight - EDGE_MARGIN - home.height : EDGE_MARGIN;
+      pos.x = farX - home.left; pos.y = farY - home.top;
+      vel.x = 0; vel.y = 0;
+    }
+
+    function step() {
+      const home = homeBox();
+      const wanted = desiredOffset(home);
+      const target = wanted.fleeing ? clampToViewport(wanted, home) : wanted;
+      if (wanted.fleeing && !isDetached) detach();
+
+      if (wanted.fleeing) {
+        // Fleeing is instant so a fast cursor can never catch it; only the
+        // return trip is springy.
+        vel.x = (target.x - pos.x) * 0.6; vel.y = (target.y - pos.y) * 0.6;
+        pos.x = target.x; pos.y = target.y;
+        const cx = home.left + home.width / 2 + pos.x, cy = home.top + home.height / 2 + pos.y;
+        if (Math.hypot(cx - cursor.x, cy - cursor.y) < TRAPPED_DISTANCE) escapeHatch(home);
+      } else {
+        vel.x = (vel.x + (target.x - pos.x) * SPRING_STIFFNESS) * SPRING_DAMPING;
+        vel.y = (vel.y + (target.y - pos.y) * SPRING_STIFFNESS) * SPRING_DAMPING;
+        pos.x += vel.x; pos.y += vel.y;
+      }
+
+      const tilt = Math.max(-TILT_MAX, Math.min(TILT_MAX, vel.x * TILT_PER_PX));
+      if (isDetached) {
+        avatar.style.left = (home.left + pos.x).toFixed(1) + "px";
+        avatar.style.top = (home.top + pos.y).toFixed(1) + "px";
+      }
+      avatar.style.setProperty("--tilt", tilt.toFixed(1) + "deg");
+      paintOutline(Math.hypot(pos.x, pos.y));
+
+      const atRest = !wanted.fleeing
+        && Math.abs(vel.x) + Math.abs(vel.y) + Math.abs(pos.x) + Math.abs(pos.y) < REST_EPSILON;
+      if (atRest) {
+        pos.x = 0; pos.y = 0;
+        if (isDetached) reattach();
+        avatar.style.setProperty("--tilt", "0deg");
+        frame = null;
+        return;
+      }
+      frame = requestAnimationFrame(step);
+    }
+
+    // Outline brightness scales with distance from home: violet at rest,
+    // blazing pink-white with a glow when it has run far.
+    function paintOutline(distance) {
+      const t = Math.min(1, distance / GLOW_DISTANCE);
+      const hue = RING_HUE_HOME + (RING_HUE_FAR - RING_HUE_HOME) * t;
+      const light = RING_LIGHT_HOME + (RING_LIGHT_FAR - RING_LIGHT_HOME) * t;
+      avatar.style.setProperty("--ring", "hsl(" + hue.toFixed(0) + " 100% " + light.toFixed(0) + "%)");
+      avatar.style.setProperty("--glow", (GLOW_MAX_BLUR * t).toFixed(0) + "px");
+      avatar.style.setProperty("--glow-color", "hsl(" + hue.toFixed(0) + " 100% 70% / " + (0.9 * t).toFixed(2) + ")");
+    }
+
+    function wake() { if (frame === null) frame = requestAnimationFrame(step); }
+
+    document.addEventListener("pointermove", function (event) {
+      if (event.pointerType !== "mouse") return;
+      cursor.x = event.clientX; cursor.y = event.clientY; cursor.inside = true;
+      wake();
+    });
+    document.addEventListener("pointerleave", function () { cursor.inside = false; wake(); });
+    window.addEventListener("scroll", wake, { passive: true });
+    window.addEventListener("resize", wake);
   }
 
   // ── Click sparks ──────────────────────────────────────────────────────────

@@ -39,24 +39,6 @@
   </symbol>
 </svg>
 
-<header class="nav" id="top">
-  <div class="nav__inner">
-    <a href="#top" class="nav__logo"><span class="nav__prompt">&gt;<span class="blink">_</span></span> ariel.pollard</a>
-    <button class="nav__toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-    <nav class="nav__menu" id="nav-menu" aria-label="Sections">
-      <a href="#experience">Experience</a>
-      <a href="#projects">Projects</a>
-      <a href="#courses">Courses</a>
-      <a href="#publications">Publications</a>
-      <a href="#leadership">Leadership</a>
-      <a href="#volunteer">Volunteer</a>
-      <a href="#fun">Fun Facts</a>
-    </nav>
-  </div>
-</header>
-
 <main id="main-content">
 
   <!-- ═══════════ HERO ═══════════ -->
@@ -100,6 +82,9 @@
   </section>
 
   <!-- ═══════════ EXPERIENCE ═══════════ -->
+  <!-- Squiggle divider: hides the seam where the hero's blobs are clipped. -->
+  <div class="squiggle" aria-hidden="true"></div>
+
   <section class="section" id="experience" aria-labelledby="experience-heading">
     <header class="section__head" data-reveal>
       <p class="eyebrow">// 01 — experience</p>
@@ -175,6 +160,21 @@
           </details>
           <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
           <div class="card__links"><a href="https://first-edition.dev" class="link-arrow">Live site</a><a href="https://github.com/ariel-378/First-Edition" class="link-arrow">Source</a></div>
+        </div>
+      </article>
+
+      <article class="card card--project" data-reveal>
+        <img class="pic ph--16x9" loading="lazy" src="images/screenshot-2026-10-17-at-10.30.28-pm.png" width="2790" height="1492" alt="Placeholder project screenshot">
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2026</span></div>
+          <h3>Woodley Leaves Center Spread</h3>
+          <p>A website that brings my school newspaper's games section online so readers can play them on any device.</p>
+          <details class="more">
+            <summary><span class="more__open">Learn more</span><span class="more__close">Show less</span></summary>
+            <p>Built for The Woodley Leaves at Maret so the puzzles that used to live only on the printed center spread are now digital.</p>
+          </details>
+          <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+          <div class="card__links"><a href="https://woodleyleavescenterspread.com" class="link-arrow">Live site</a></div>
         </div>
       </article>
 
@@ -256,12 +256,29 @@
 
     <ul class="pubs">
       <li class="card card--pub" data-reveal>
-        <div class="ph ph--portrait" role="img" aria-label="Placeholder publication cover"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
         <div class="card__content">
           <div class="card__meta"><span class="pill pill--cyan">Research</span><span class="mono">2026 (in preparation)</span></div>
           <h3>FSCN1 overexpression in the proximal-inflammatory subtype of lung adenocarcinoma is subtype-intrinsic and not explained by arm-level 7p gain</h3>
           <p class="card__org">Manuscript in preparation (Pollard A.L., Wilkerson M.D.)</p>
           <p>Across 515 TCGA tumors, the subtype's key marker gene is turned up by tumor identity, not extra chromosome 7 copies.</p>
+        </div>
+      </li>
+      <li class="card card--pub" data-reveal>
+        <div class="card__content">
+          <div class="card__meta"><span class="pill pill--pink">Op-Ed</span><span class="mono">2024 — 2026</span></div>
+          <h3>Op-eds in The Woodley Leaves</h3>
+          <p class="card__org">Maret School’s student newspaper · Pollard, A.L.</p>
+          <ul class="pub-list">
+          <li><span class="mono">2026</span><span class="pub-list__title">“Intolerant Politics in Scientific Research Is Deadly”</span></li>
+          <li><span class="mono">2025</span><span class="pub-list__title">“Mayor-Elect Mamdani’s Social Media Strategy Could Save the Democratic Party”</span></li>
+          <li><span class="mono">2025</span><span class="pub-list__title">“Recent Political Assassinations Unveil Social Media’s Political Power”</span></li>
+          <li><span class="mono">2025</span><span class="pub-list__title">“Immigration Crackdowns and Rising Tariffs Spell Disaster for Agriculture”</span></li>
+          <li><span class="mono">2025</span><span class="pub-list__title">“Liberty’s Only Defense Is Activism”</span></li>
+          <li><span class="mono">2025</span><span class="pub-list__title">“Television Cop Shows Push a False Pro-Police Narrative”</span></li>
+          <li><span class="mono">2024</span><span class="pub-list__title">“A Republican Congress Diminishes Any Hope for Puerto Rican Statehood”</span></li>
+          <li><span class="mono">2024</span><span class="pub-list__title">“The Fall of Roe Is Just the Beginning: Multiple Rights Are in Peril”</span></li>
+          <li><span class="mono">2024</span><span class="pub-list__title">“Celebrities Should Not Be Forced to Declare Their Sexual Identity”</span></li>
+          </ul>
         </div>
       </li>
     </ul>
@@ -278,10 +295,19 @@
       <article class="card card--photo" data-reveal>
         <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
         <div class="card__content">
+          <div class="card__meta"><span class="mono">2026 — present · Op-Ed Editor 2025 · writer since 2023</span></div>
+          <h3>Online Editor-in-Chief</h3>
+          <p class="card__org">The Woodley Leaves, Maret School's official student-run newspaper</p>
+          <p>Built and edit the online edition and published its code open-source on GitHub. Wrote, researched, and edited 30 op-ed articles as a writer and Op-Ed Editor.</p>
+        </div>
+      </article>
+      <article class="card card--photo" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
           <h3>Robot Team Co-Leader</h3>
-          <p class="card__org">Maret Botball Engineering Team</p>
-          <p>Lead a team building autonomous robots in C for national Botball competitions and mentor younger students; named Best Rookie Team.</p>
+          <p class="card__org">Maret Botball Engineering Team · Best Rookie Team, 2025</p>
+          <p>Lead the team building autonomous robots in C for the national Botball competition and mentor younger students.</p>
         </div>
       </article>
       <article class="card card--photo" data-reveal>
@@ -289,8 +315,8 @@
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
           <h3>Co-Leader</h3>
-          <p class="card__org">Maret Girls Who Code Club</p>
-          <p>Recruited 10 members and built a safe space for girls in STEM, teaching C and Python through engaging coding projects.</p>
+          <p class="card__org">Maret Girls Who Code Club, supporting girls in STEM</p>
+          <p>Recruited 10 members, cultivated a safe space for girls in STEM, taught C and Python, and shared exciting, unconventional coding projects.</p>
         </div>
       </article>
       <article class="card card--photo" data-reveal>
@@ -298,8 +324,26 @@
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
           <h3>Co-Leader</h3>
-          <p class="card__org">Maret Makerspace Club</p>
-          <p>Run the student 3D printing and building group: created creativity competitions, certified students to 3D print, and recruited members.</p>
+          <p class="card__org">Maret Makerspace Club, a student-led 3D printing and building group</p>
+          <p>Created makerspace creativity competitions, certified and taught students to 3D print, volunteered to teach middle schoolers, and recruited members.</p>
+        </div>
+      </article>
+      <article class="card card--photo" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2025 — present</span></div>
+          <h3>Co-Leader</h3>
+          <p class="card__org">Maret Creative Writing Club</p>
+          <p>Co-lead the club's meetings and keep a space where students share and workshop their writing.</p>
+        </div>
+      </article>
+      <article class="card card--photo" data-reveal>
+        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <div class="card__content">
+          <div class="card__meta"><span class="mono">2025 — present</span></div>
+          <h3>Co-Founder &amp; Leader</h3>
+          <p class="card__org">Maret Taylor Swift Club, a student-led celebration of Taylor Swift's music and community</p>
+          <p>Founded the club to build a community of Maret Swifties: bonded over new music, and built and donated 50 gift baskets to the NIH Children's Inn.</p>
         </div>
       </article>
     </div>
@@ -380,9 +424,10 @@
 
 <footer class="footer">
   <p><span class="mono">© 2026 Ariel Pollard</span> · Built by hand with HTML, CSS, and a little JavaScript.</p>
-  <a href="#top" class="footer__top">Back to top ↑</a>
+  <a href="#main-content" class="footer__top">Back to top ↑</a>
 </footer>
 
 <script src="script.js"></script>
+<script src="shell.js"></script>
 </body>
 </html>
