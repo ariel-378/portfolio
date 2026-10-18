@@ -116,6 +116,15 @@ img, svg { display: block; max-width: 100%; }
 }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
+/* A light sweep crosses the button on hover. */
+.btn { position: relative; overflow: hidden; }
+.btn::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: translateX(-180%); transition: transform 520ms var(--ease-out);
+  pointer-events: none;
+}
+.btn:hover::after { transform: translateX(320%); }
 .btn--primary { background: var(--ink); color: #fff; box-shadow: 4px 4px 0 var(--pink); }
 .btn--primary:hover { box-shadow: 6px 6px 0 var(--pink); }
 .btn--ghost { background: var(--card); color: var(--ink); border-color: var(--ink); box-shadow: 4px 4px 0 var(--cyan); }
@@ -140,7 +149,13 @@ img, svg { display: block; max-width: 100%; }
   font-family: var(--font-mono); font-size: 0.74rem;
   padding: 4px 10px; border-radius: 8px;
   background: var(--bg-tint); color: var(--muted); border: 1px solid var(--line);
+  transition: transform var(--dur) var(--ease-out);
 }
+/* Chips hop one after another when their card is hovered. */
+.card:hover .chips li { transform: translateY(-3px); }
+.card:hover .chips li:nth-child(2) { transition-delay: 40ms; }
+.card:hover .chips li:nth-child(3) { transition-delay: 80ms; }
+.card:hover .chips li:nth-child(4) { transition-delay: 120ms; }
 
 .link-arrow {
   font-family: var(--font-head); font-weight: 700; font-size: 0.95rem;
@@ -176,6 +191,13 @@ img, svg { display: block; max-width: 100%; }
 .ph--circle { aspect-ratio: 1; border-radius: 50%; }
 .ph--circle::after { display: none; }
 
+/* Real images in former placeholder slots. Pair with a ph--* shape class. */
+.pic { display: block; width: 100%; height: auto; object-fit: cover; border-radius: var(--radius-sm); border: 2px solid var(--ink); background: #fff; }
+.pic--logo { object-fit: contain; padding: 6px; }
+.pic--botball { object-position: 50% 58%; }
+.pic--avatar { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 50%; object-fit: cover; object-position: 50% 20%; }
+.card--project .pic, .card--photo .pic { border-radius: 0; border: 0; border-bottom: 2px solid var(--ink); }
+
 /* ── Nav ─────────────────────────────────────────────────────────────────── */
 .nav {
   position: sticky; top: 0; z-index: 50;
@@ -201,6 +223,7 @@ img, svg { display: block; max-width: 100%; }
   width: 30px; height: 30px; border-radius: 9px;
   background: var(--grad); color: #fff; font-size: 0.8rem;
 }
+.blink { animation: blink 1.1s steps(2) infinite; }
 .nav__menu { display: flex; gap: 4px; }
 .nav__menu a {
   padding: 8px 12px; border-radius: 999px;
@@ -239,7 +262,9 @@ img, svg { display: block; max-width: 100%; }
 
 .hero__visual { position: relative; display: grid; gap: 18px; justify-items: end; }
 .avatar {
-  width: clamp(140px, 18vw, 200px);
+  position: relative; display: block;
+  width: clamp(140px, 18vw, 200px); aspect-ratio: 1; border-radius: 50%;
+  background: #fff;
   border: 3px solid #fff; box-shadow: 0 0 0 3px var(--violet), 8px 8px 0 var(--yellow);
   animation: float 6s ease-in-out infinite;
 }
@@ -261,12 +286,26 @@ img, svg { display: block; max-width: 100%; }
 .t-out { color: #C9C5F2; }
 .t-ok { color: var(--lime); }
 .t-cursor { display: inline-block; width: 9px; height: 1.05em; vertical-align: text-bottom; background: var(--pink); animation: blink 1s steps(2) infinite; }
+/* While script.js is typing, lines wait their turn. The newlines between them
+   still take up space, so the card never changes height. */
+#terminal-lines.is-typing .t-line:not(.is-shown) { display: none; }
+
+/* The gradient on the hero name slides slowly. */
+.hero h1 .grad { background-size: 200% 100%; animation: shimmer 7s linear infinite; }
+
+/* A dashed ring orbits the portrait. */
+.avatar { overflow: visible; }
+.avatar::before {
+  content: ""; position: absolute; inset: -16px; border-radius: 50%;
+  border: 2px dashed var(--violet); opacity: 0.6;
+  animation: spin 28s linear infinite;
+}
 
 /* Soft gradient blobs behind the hero. */
-.blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.55; pointer-events: none; }
+.blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.55; pointer-events: none; animation: drift 14s ease-in-out infinite; }
 .blob--pink { width: 420px; height: 420px; background: var(--pink); top: -140px; left: -120px; }
-.blob--cyan { width: 380px; height: 380px; background: var(--cyan); right: -120px; top: 40px; }
-.blob--lime { width: 300px; height: 300px; background: var(--lime); bottom: -160px; left: 40%; opacity: 0.4; }
+.blob--cyan { width: 380px; height: 380px; background: var(--cyan); right: -120px; top: 40px; animation-duration: 18s; animation-delay: -6s; }
+.blob--lime { width: 300px; height: 300px; background: var(--lime); bottom: -160px; left: 40%; opacity: 0.4; animation-duration: 11s; animation-delay: -3s; }
 
 /* ── Sections ────────────────────────────────────────────────────────────── */
 .section { padding: var(--space-section) var(--gutter); }
@@ -301,23 +340,45 @@ img, svg { display: block; max-width: 100%; }
 .timeline::before {
   content: ""; position: absolute; left: 35px; top: 20px; bottom: 20px; width: 3px;
   background: var(--grad); border-radius: 3px; opacity: 0.6;
+  transform: scaleY(0); transform-origin: top;
+  transition: transform 1.4s var(--ease-out) 150ms;
 }
+/* The list itself never fades — it carries data-reveal only so the spine
+   knows when to draw. Its items reveal on their own. */
+.timeline[data-reveal] { opacity: 1; transform: none; transition: none; }
+.timeline.is-visible::before { transform: scaleY(1); }
 .timeline__item { position: relative; display: grid; grid-template-columns: 72px 1fr; gap: 22px; align-items: start; }
 .timeline__logo { width: 72px; position: relative; z-index: 1; background: #fff; box-shadow: 4px 4px 0 var(--yellow); }
 .timeline__body { padding: 22px 24px 26px; box-shadow: 6px 6px 0 var(--cyan); }
 .timeline__body:hover { box-shadow: 10px 10px 0 var(--cyan); }
 
-/* Projects: a bento where the first card spans the full width. */
+/* Projects: equal cards, each with its own accent color. */
 .bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .card--project { overflow: hidden; display: flex; flex-direction: column; }
 .card--project .ph { border-radius: 0; border: 0; border-bottom: 2px solid var(--ink); }
-.card--featured { grid-column: 1 / -1; box-shadow: 6px 6px 0 var(--pink); }
-.card--featured:hover { box-shadow: 10px 10px 0 var(--pink); }
-.card--featured .card__content { padding: 26px 30px 30px; max-width: 70ch; }
-.bento .card--project:nth-child(3) { box-shadow: 6px 6px 0 var(--cyan); }
-.bento .card--project:nth-child(3):hover { box-shadow: 10px 10px 0 var(--cyan); }
-.bento .card--project:nth-child(4) { box-shadow: 6px 6px 0 var(--lime); }
-.bento .card--project:nth-child(4):hover { box-shadow: 10px 10px 0 var(--lime); }
+/* Project images get a taller slot so the photo dominates the card. */
+.card--project .ph--16x9 { aspect-ratio: 1; }
+.bento .card--project:nth-child(3n+1) { box-shadow: 6px 6px 0 var(--pink); }
+.bento .card--project:nth-child(3n+1):hover { box-shadow: 10px 10px 0 var(--pink); }
+.bento .card--project:nth-child(3n+2) { box-shadow: 6px 6px 0 var(--cyan); }
+.bento .card--project:nth-child(3n+2):hover { box-shadow: 10px 10px 0 var(--cyan); }
+.bento .card--project:nth-child(3n) { box-shadow: 6px 6px 0 var(--lime); }
+.bento .card--project:nth-child(3n):hover { box-shadow: 10px 10px 0 var(--lime); }
+
+/* Project cards: the first sentence shows; the rest sits behind "Learn more". */
+.more { margin-top: 8px; }
+.more summary {
+  display: inline-flex; align-items: center; gap: 4px; list-style: none;
+  cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--violet);
+}
+.more summary::-webkit-details-marker { display: none; }
+.more summary::after { content: "↓"; transition: transform var(--dur-fast) var(--ease-out); }
+.more summary:hover { text-decoration: underline; }
+.more summary:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; border-radius: 4px; }
+.more[open] summary::after { transform: rotate(180deg); }
+.more__close, .more[open] .more__open { display: none; }
+.more[open] .more__close { display: inline; }
+.more p { margin-top: 8px; }
 
 /* Courses: badge on the left, text on the right. */
 .card--cert { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 20px; box-shadow: 6px 6px 0 var(--yellow); }
@@ -354,7 +415,11 @@ img, svg { display: block; max-width: 100%; }
 }
 .fact:hover { transform: translateY(-4px) rotate(-1deg); }
 .fact:nth-child(even):hover { transform: translateY(-4px) rotate(1deg); }
-.fact__emoji { font-size: 2rem; line-height: 1; }
+.fact__emoji { font-size: 2rem; line-height: 1; display: inline-block; width: max-content; animation: bob 4.5s ease-in-out infinite; }
+.fact:nth-child(2n) .fact__emoji { animation-delay: -1.2s; }
+.fact:nth-child(3n) .fact__emoji { animation-delay: -2.4s; }
+.fact:nth-child(4n) .fact__emoji { animation-delay: -3.3s; }
+.fact:hover .fact__emoji { animation: wiggle 600ms var(--ease-out); }
 .fact--pink   { background: var(--pink-lt);   box-shadow: 5px 5px 0 var(--pink); }
 .fact--cyan   { background: var(--cyan-lt);   box-shadow: 5px 5px 0 var(--cyan); }
 .fact--lime   { background: var(--lime-lt);   box-shadow: 5px 5px 0 var(--lime); }
@@ -387,8 +452,69 @@ img, svg { display: block; max-width: 100%; }
 }
 .footer__top { font-family: var(--font-mono); font-size: 0.82rem; text-decoration: none; color: var(--violet); }
 
+/* ── Intro splash ───────────────────────────────────────────────────────── */
+.splash {
+  position: fixed; inset: 0; z-index: 200;
+  display: none; place-items: center;
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.14) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  transition: opacity 450ms var(--ease-out);
+  cursor: pointer;
+}
+.splash.is-on { display: grid; }
+.splash.is-done { opacity: 0; pointer-events: none; }
+
+.splash__stage { display: grid; justify-items: center; gap: 22px; --blk: clamp(36px, 7vw, 54px); }
+.splash__grid {
+  display: grid;
+  grid-template-columns: repeat(5, var(--blk));
+  grid-auto-rows: var(--blk);
+  gap: 8px;
+}
+.splash__ground {
+  width: calc(var(--blk) * 5 + 8px * 4 + 48px); height: 10px; border-radius: 999px;
+  background: var(--grad); opacity: 0.7;
+  transform: scaleX(0); transition: transform 600ms var(--ease-out) 200ms;
+}
+.splash.is-building .splash__ground { transform: scaleX(1); }
+.splash.is-breaking .splash__ground { transform: scaleX(0); transition-delay: 150ms; }
+.splash__caption {
+  font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--violet);
+  opacity: 0; transition: opacity 400ms var(--ease-out) 900ms;
+}
+.splash.is-building .splash__caption { opacity: 1; }
+.splash.is-breaking .splash__caption { opacity: 0; transition-delay: 0s; }
+
+.splash__skip {
+  position: absolute; top: 18px; right: 18px;
+  padding: 8px 14px; border-radius: 999px; border: 2px solid var(--ink);
+  background: var(--card); color: var(--ink); cursor: pointer;
+  font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* Blocks drop in one by one, then each flies off along its own vector. */
+.blk {
+  width: var(--blk); height: var(--blk); border-radius: 11px;
+  border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  opacity: 0; transform: translateY(-70px) scale(0.4);
+}
+.blk--pink   { background: var(--pink); }
+.blk--violet { background: var(--violet); }
+.blk--cyan   { background: var(--cyan); }
+.blk--lime   { background: var(--lime); }
+.blk--yellow { background: var(--yellow); }
+.splash.is-building .blk { animation: blk-in 420ms var(--ease-out) var(--in-delay) both; }
+.splash.is-breaking .blk { animation: blk-out 820ms cubic-bezier(0.5, 0, 1, 0.5) var(--out-delay) both; }
+
+/* The page holds still behind the splash: no scrolling, and the hero's
+   load-in waits so it isn't missed. */
+body.has-splash { overflow: hidden; }
+body.has-splash .hero__copy > *, body.has-splash .terminal { animation-play-state: paused; }
+
 /* ── Reveal & keyframes ─────────────────────────────────────────────────── */
-[data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity var(--dur) var(--ease-out), transform 480ms var(--ease-out); }
+[data-reveal] { opacity: 0; transform: translateY(22px) scale(0.975); transition: opacity var(--dur) var(--ease-out), transform 520ms var(--ease-out); }
 [data-reveal].is-visible { opacity: 1; transform: none; }
 /* Keep the card hover lift even though reveal also sets transform. */
 .card[data-reveal].is-visible:hover { transform: translate(-2px, -2px); }
@@ -398,6 +524,28 @@ img, svg { display: block; max-width: 100%; }
 @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 @keyframes blink { to { opacity: 0; } }
+@keyframes shimmer { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(40px, -30px) scale(1.08); }
+  66%      { transform: translate(-25px, 25px) scale(0.95); }
+}
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes blk-in {
+  from { opacity: 0; transform: translateY(-70px) scale(0.4); }
+  70%  { opacity: 1; transform: translateY(4px) scale(1.04); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes blk-out {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.5); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25%      { transform: rotate(-14deg) scale(1.15); }
+  60%      { transform: rotate(10deg) scale(1.1); }
+}
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {

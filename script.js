@@ -49,6 +49,52 @@
     revealables.forEach(function (el) { observer.observe(el); });
   }
 
+  // ── Terminal typing ───────────────────────────────────────────────────────
+  // The hero terminal types each command, then prints its output. Without
+  // JavaScript, or under reduced motion, the finished transcript just shows.
+  const TYPE_MS = 40;
+  const PAUSE_AFTER_CMD_MS = 240;
+  const PAUSE_AFTER_OUT_MS = 380;
+  const terminal = document.getElementById("terminal-lines");
+
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  async function typeInto(el, text, cursor) {
+    el.textContent = "";
+    el.appendChild(cursor);
+    for (const ch of text) {
+      el.insertBefore(document.createTextNode(ch), cursor);
+      await wait(TYPE_MS);
+    }
+  }
+
+  async function playTerminal() {
+    const lines = Array.from(terminal.querySelectorAll(".t-line"));
+    const cursor = terminal.querySelector(".t-cursor");
+    terminal.classList.add("is-typing");
+    for (const line of lines) {
+      const cmd = line.querySelector(".t-cmd");
+      line.classList.add("is-shown");
+      if (cmd) {
+        await typeInto(cmd, cmd.textContent, cursor);
+        await wait(PAUSE_AFTER_CMD_MS);
+      } else if (!line.contains(cursor)) {
+        await wait(PAUSE_AFTER_OUT_MS);
+      }
+    }
+    // Park the cursor back on the final prompt line.
+    lines[lines.length - 1].appendChild(cursor);
+  }
+
+  // Wait for the intro splash, if one is running, so the typing isn't missed.
+  if (terminal && !REDUCED_MOTION) {
+    if (document.body.classList.contains("has-splash")) {
+      document.addEventListener("splash-done", playTerminal, { once: true });
+    } else {
+      playTerminal();
+    }
+  }
+
   // ── Active nav link ───────────────────────────────────────────────────────
   const links = Array.from(document.querySelectorAll(".nav__menu a[href^='#']"));
   const sections = links

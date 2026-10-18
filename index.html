@@ -12,11 +12,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="styles.css?v=2" />
 </head>
 <body>
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- Intro splash: blocks build the monogram, then come apart. splash.js runs
+     it; it stays hidden without JavaScript. -->
+<div class="splash" id="splash" aria-label="Intro animation">
+  <button class="splash__skip" type="button">Skip →</button>
+  <div class="splash__stage">
+    <div class="splash__grid" id="splash-grid" aria-hidden="true"></div>
+    <div class="splash__ground" aria-hidden="true"></div>
+    <p class="splash__caption">// ariel.pollard</p>
+  </div>
+</div>
+<script src="splash.js"></script>
 
 <!-- Reusable placeholder-image icon -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -29,7 +41,7 @@
 
 <header class="nav" id="top">
   <div class="nav__inner">
-    <a href="#top" class="nav__logo"><span class="nav__prompt">&gt;_</span> ariel.pollard</a>
+    <a href="#top" class="nav__logo"><span class="nav__prompt">&gt;<span class="blink">_</span></span> ariel.pollard</a>
     <button class="nav__toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -56,32 +68,32 @@
     <div class="hero__inner">
       <div class="hero__copy">
         <p class="eyebrow">// hello, world</p>
-        <h1 id="hero-heading">Hi, I'm <span class="grad">Ariel</span>.<br>I build things that <span class="underline-wiggle">matter</span>.</h1>
-        <p class="deck">Placeholder tagline goes here — one or two sentences on who you are, what you make, and what you're excited about right now.</p>
+        <h1 id="hero-heading">Hi, I'm <span class="grad">Ariel</span>.<br>I'm a builder</h1>
+        <p class="deck">Explore my portfolio (I built this too)!</p>
         <div class="hero__cta">
           <a href="#projects" class="btn btn--primary">See my work</a>
           <a href="#contact" class="btn btn--ghost">Say hello</a>
         </div>
         <ul class="hero__pills" aria-label="Quick facts">
-          <li class="pill pill--violet">📍 Placeholder City</li>
-          <li class="pill pill--cyan">🎓 Placeholder School '27</li>
-          <li class="pill pill--pink">⚡ Placeholder interest</li>
+          <li class="pill pill--violet">📍 Washington, D.C.</li>
+          <li class="pill pill--cyan">🎓 Maret '27</li>
+          <li class="pill pill--pink">⚡ Electrical Engineering</li>
         </ul>
       </div>
 
       <div class="hero__visual">
-        <div class="avatar ph ph--circle" role="img" aria-label="Placeholder portrait">
-          <svg class="ph__icon"><use href="#ph-icon"/></svg>
+        <div class="avatar">
+          <img class="pic pic--avatar" src="images/ariel-headshot.png" alt="Headshot of Ariel Pollard" width="650" height="504">
         </div>
         <div class="terminal" aria-label="Terminal card">
           <div class="terminal__bar"><span></span><span></span><span></span><em>ariel — zsh</em></div>
-          <pre class="terminal__body"><code><span class="t-prompt">~ $</span> whoami
-<span class="t-out">placeholder-human · builder · learner</span>
-<span class="t-prompt">~ $</span> cat interests.txt
-<span class="t-out">[ "placeholder", "placeholder", "placeholder" ]</span>
-<span class="t-prompt">~ $</span> ./status
-<span class="t-out t-ok">✓ currently building something new</span>
-<span class="t-prompt">~ $</span> <span class="t-cursor"></span></code></pre>
+          <pre class="terminal__body"><code id="terminal-lines"><span class="t-line"><span class="t-prompt">~ $</span> <span class="t-cmd">whoami</span></span>
+<span class="t-line t-out">Ariel · builder · learner</span>
+<span class="t-line"><span class="t-prompt">~ $</span> <span class="t-cmd">cat interests.txt</span></span>
+<span class="t-line t-out">[ "STEM Learning", "Robotics", "Bioinformatics" ]</span>
+<span class="t-line"><span class="t-prompt">~ $</span> <span class="t-cmd">./status</span></span>
+<span class="t-line t-out t-ok">✓ currently working on lung cancer research</span>
+<span class="t-line"><span class="t-prompt">~ $</span> <span class="t-cursor"></span></span></code></pre>
         </div>
       </div>
     </div>
@@ -94,46 +106,49 @@
       <h2 id="experience-heading">Where I've <span class="grad">worked</span></h2>
     </header>
 
-    <ol class="timeline">
+    <ol class="timeline" data-reveal>
       <li class="timeline__item" data-reveal>
-        <div class="timeline__logo ph ph--square" role="img" aria-label="Placeholder company logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="timeline__logo pic pic--logo ph--square" src="images/usu-seal.png" alt="Uniformed Services University seal" width="500" height="500" loading="lazy">
         <div class="timeline__body card">
-          <div class="card__meta"><span class="mono">2026 — present</span><span class="pill pill--lime">Current</span></div>
-          <h3>Placeholder Role Title</h3>
-          <p class="card__org">Placeholder Organization · Placeholder City</p>
+          <div class="card__meta"><span class="mono">June 2025 — present</span><span class="pill pill--lime">Current</span></div>
+          <h3>Bioinformatics Intern</h3>
+          <p class="card__org">Wilkerson Lab, Uniformed Services University / Walter Reed National Military Medical Center · Bethesda, MD</p>
           <ul class="bullets">
-            <li>Placeholder bullet describing what you did and the impact it had.</li>
-            <li>Placeholder bullet with a number in it, like "grew X by 40%."</li>
-            <li>Placeholder bullet about a skill or tool you picked up.</li>
+            <li>Testing whether a common chromosome 7 gain drives the inflammation-active subtype of lung adenocarcinoma; showed its key marker gene is driven by tumor identity, not extra DNA copies.</li>
+            <li>Analyzed genomic data from 515 tumors in The Cancer Genome Atlas; first-author paper in preparation.</li>
+            <li>Selected as the lab's sole high school intern; wrote the full statistical pipeline in R.</li>
           </ul>
-          <ul class="chips" aria-label="Skills used"><li>Placeholder</li><li>Skill</li><li>Tool</li></ul>
+          <ul class="chips" aria-label="Skills used"><li>R</li><li>Genomics</li><li>Statistics</li></ul>
         </div>
       </li>
 
       <li class="timeline__item" data-reveal>
-        <div class="timeline__logo ph ph--square" role="img" aria-label="Placeholder company logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="timeline__logo pic pic--logo ph--square" src="images/maret-frog.jpg" alt="Maret School frog logo" width="512" height="512" loading="lazy">
         <div class="timeline__body card">
-          <div class="card__meta"><span class="mono">Summer 2025</span></div>
-          <h3>Placeholder Role Title</h3>
-          <p class="card__org">Placeholder Organization · Remote</p>
+          <div class="card__meta"><span class="mono">2023 — present</span><span class="pill pill--lime">Current</span></div>
+          <h3>Online Editor-in-Chief</h3>
+          <p class="card__org">The Woodley Leaves, Maret School · Washington, D.C. · Op-Ed Editor and staff writer before</p>
           <ul class="bullets">
-            <li>Placeholder bullet describing what you did and the impact it had.</li>
-            <li>Placeholder bullet about what you learned.</li>
+            <li>Ran on a promise to rebuild the paper's website, then built it solo over summer 2026: an open-source site with an in-browser editor dashboard that runs behind any school's login.</li>
+            <li>Over 100 commits and 1,000 automated tests; Maret approved it and asked Finalsite to deploy it. Earlier wrote and edited 30 op-ed articles.</li>
+            <li>Published the code on GitHub, ready to power any school newspaper.</li>
           </ul>
-          <ul class="chips" aria-label="Skills used"><li>Placeholder</li><li>Skill</li></ul>
+          <ul class="chips" aria-label="Skills used"><li>Web dev</li><li>Git</li><li>Editing</li></ul>
         </div>
       </li>
 
       <li class="timeline__item" data-reveal>
-        <div class="timeline__logo ph ph--square" role="img" aria-label="Placeholder company logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="timeline__logo pic pic--logo ph--square" src="images/sparks-logo.png" alt="SPARKS Book Club logo" width="600" height="600" loading="lazy">
         <div class="timeline__body card">
-          <div class="card__meta"><span class="mono">2024 — 2025</span></div>
-          <h3>Placeholder Role Title</h3>
-          <p class="card__org">Placeholder Organization · Placeholder City</p>
+          <div class="card__meta"><span class="mono">2020 — present</span><span class="pill pill--lime">Current</span></div>
+          <h3>Co-Founder &amp; Student Leader</h3>
+          <p class="card__org">SPARKS Book Club Inc. · Montgomery County, MD</p>
           <ul class="bullets">
-            <li>Placeholder bullet describing what you did and the impact it had.</li>
+            <li>Started a free, youth-led virtual book club during the 2020 pandemic for 3rd–5th grade girls at a local Title-1 school; now a registered, all-volunteer 501(c)(3).</li>
+            <li>$12K raised, 7 volunteers, 15 students a year, 70+ students served.</li>
+            <li>Design the curriculum and run monthly sessions pairing a novel with a STEM or art project (Scratch coding, bionic-limb design, herb gardens); built sparkslearning.org.</li>
           </ul>
-          <ul class="chips" aria-label="Skills used"><li>Placeholder</li><li>Skill</li><li>Tool</li></ul>
+          <ul class="chips" aria-label="Skills used"><li>Curriculum</li><li>Nonprofit</li><li>Teaching</li></ul>
         </div>
       </li>
     </ol>
@@ -144,51 +159,51 @@
     <header class="section__head" data-reveal>
       <p class="eyebrow">// 02 — projects</p>
       <h2 id="projects-heading">Things I've <span class="grad">built</span></h2>
-      <p class="section__deck">Placeholder intro for the projects section. A sentence on what ties them together.</p>
+      <p class="section__deck">A few of the projects I am on! Learning and Teaching!</p>
     </header>
 
     <div class="bento">
-      <article class="card card--project card--featured" data-reveal>
-        <div class="ph ph--wide" role="img" aria-label="Placeholder project screenshot"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+      <article class="card card--project" data-reveal>
+        <img class="pic ph--16x9" loading="lazy" src="images/screenshot-2026-10-17-at-9.24.53-pm.png" width="2978" height="1714" alt="Placeholder project screenshot">
         <div class="card__content">
           <div class="card__meta"><span class="pill pill--pink">Featured</span><span class="mono">2026</span></div>
-          <h3>Placeholder Featured Project</h3>
-          <p>Placeholder description — two or three sentences on the problem, what you built, and the result. This card is bigger, so it can hold a little more.</p>
-          <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Placeholder</li></ul>
-          <div class="card__links"><a href="#" class="link-arrow">Live site</a><a href="#" class="link-arrow">Source</a></div>
+          <h3>First Edition</h3>
+          <p>An open-source school newspaper website with an in-browser editor dashboard that runs behind any school's login.</p>
+          <details class="more">
+            <summary><span class="more__open">Learn more</span><span class="more__close">Show less</span></summary>
+            <p>I built it solo over summer 2026 for The Woodley Leaves, finishing with 96 commits and 1,041 automated tests. Maret approved it and asked Finalsite to deploy it.</p>
+          </details>
+          <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+          <div class="card__links"><a href="https://first-edition.dev" class="link-arrow">Live site</a><a href="https://github.com/ariel-378/First-Edition" class="link-arrow">Source</a></div>
         </div>
       </article>
 
       <article class="card card--project" data-reveal>
-        <div class="ph ph--16x9" role="img" aria-label="Placeholder project screenshot"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="pic ph--16x9" loading="lazy" src="images/screenshot-2026-10-12-at-3.55.58-pm.png" width="2852" height="1682" alt="Placeholder project screenshot">
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025</span></div>
-          <h3>Placeholder Project</h3>
-          <p>Placeholder description in one or two sentences.</p>
-          <ul class="chips"><li>Python</li><li>Placeholder</li></ul>
-          <div class="card__links"><a href="#" class="link-arrow">Source</a></div>
+          <h3>sparkslearning.org</h3>
+          <p>The website for SPARKS Book Club, the literacy and STEM nonprofit I co-founded.</p>
+          <details class="more">
+            <summary><span class="more__open">Learn more</span><span class="more__close">Show less</span></summary>
+            <p>Currently adding a feature to add a login feature for current students, parents, and volunteers to get up-to-date information on future meetings and book deliveries. For volunteers, the website will also have direct purchasing of books.</p>
+          </details>
+          <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+          <div class="card__links"><a href="https://sparkslearning.org/" class="link-arrow">Live site</a></div>
         </div>
       </article>
 
       <article class="card card--project" data-reveal>
-        <div class="ph ph--16x9" role="img" aria-label="Placeholder project screenshot"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="pic ph--16x9 pic--botball" src="images/botball.jpg" alt="Ariel adjusting the team's robot at the Botball competition" width="945" height="1400" loading="lazy">
         <div class="card__content">
-          <div class="card__meta"><span class="mono">2025</span></div>
-          <h3>Placeholder Project</h3>
-          <p>Placeholder description in one or two sentences.</p>
-          <ul class="chips"><li>Hardware</li><li>Placeholder</li></ul>
-          <div class="card__links"><a href="#" class="link-arrow">Demo</a></div>
-        </div>
-      </article>
-
-      <article class="card card--project" data-reveal>
-        <div class="ph ph--16x9" role="img" aria-label="Placeholder project screenshot"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
-        <div class="card__content">
-          <div class="card__meta"><span class="mono">2024</span></div>
-          <h3>Placeholder Project</h3>
-          <p>Placeholder description in one or two sentences.</p>
-          <ul class="chips"><li>Placeholder</li></ul>
-          <div class="card__links"><a href="#" class="link-arrow">Read more</a></div>
+          <div class="card__meta"><span class="mono">2026</span></div>
+          <h3>Maret Botball robots</h3>
+          <p>Built an autonomous robot for the national Botball competition.</p>
+          <details class="more">
+            <summary><span class="more__open">Learn more</span><span class="more__close">Show less</span></summary>
+            <p>Coded in C; our team won Best Rookie Team.</p>
+          </details>
+          <ul class="chips"><li>C</li><li>Circuitry</li></ul>
         </div>
       </article>
     </div>
@@ -203,57 +218,30 @@
 
     <div class="grid grid--3">
       <article class="card card--cert" data-reveal>
-        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder certificate badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
-        <div>
-          <span class="pill pill--violet">Certificate</span>
-          <h3>Placeholder Certificate Name</h3>
-          <p class="card__org">Placeholder Provider · 2026</p>
-          <p>One line on what it covered.</p>
-        </div>
-      </article>
-      <article class="card card--cert" data-reveal>
-        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder course badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="pic cert__badge ph--square" loading="lazy" src="images/harvard_university_coat_of_arms.svg" width="321" height="312" alt="Placeholder course badge">
         <div>
           <span class="pill pill--cyan">Course</span>
-          <h3>Placeholder Course Name</h3>
-          <p class="card__org">Placeholder Institution · 2025</p>
-          <p>One line on what it covered.</p>
+          <h3>Data Science: R Basics (PH125.1)</h3>
+          <p class="card__org">HarvardX · 2025</p>
+          <p>R programming fundamentals for data analysis.</p>
         </div>
       </article>
       <article class="card card--cert" data-reveal>
-        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder course badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="pic cert__badge ph--square" loading="lazy" src="images/harvard_university_coat_of_arms-2.svg" width="321" height="312" alt="Placeholder course badge">
         <div>
           <span class="pill pill--cyan">Course</span>
-          <h3>Placeholder Course Name</h3>
-          <p class="card__org">Placeholder Institution · 2025</p>
-          <p>One line on what it covered.</p>
+          <h3>CS50: Introduction to Computer Science</h3>
+          <p class="card__org">HarvardX · 2024</p>
+          <p>Harvard's intro to computer science and programming.</p>
         </div>
       </article>
       <article class="card card--cert" data-reveal>
-        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder certificate badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
-        <div>
-          <span class="pill pill--violet">Certificate</span>
-          <h3>Placeholder Certificate Name</h3>
-          <p class="card__org">Placeholder Provider · 2024</p>
-          <p>One line on what it covered.</p>
-        </div>
-      </article>
-      <article class="card card--cert" data-reveal>
-        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder course badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
-        <div>
-          <span class="pill pill--lime">Workshop</span>
-          <h3>Placeholder Workshop Name</h3>
-          <p class="card__org">Placeholder Host · 2024</p>
-          <p>One line on what it covered.</p>
-        </div>
-      </article>
-      <article class="card card--cert" data-reveal>
-        <div class="cert__badge ph ph--square" role="img" aria-label="Placeholder course badge"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="pic cert__badge ph--square" loading="lazy" src="images/brown-university-symbol.png" width="3840" height="2160" alt="Placeholder course badge">
         <div>
           <span class="pill pill--cyan">Course</span>
-          <h3>Placeholder Course Name</h3>
-          <p class="card__org">Placeholder Institution · 2024</p>
-          <p>One line on what it covered.</p>
+          <h3>Introduction to Arduino</h3>
+          <p class="card__org">Brown University Pre-College · 2024</p>
+          <p>Programming Arduino microcontrollers and circuits.</p>
         </div>
       </article>
     </div>
@@ -270,31 +258,10 @@
       <li class="card card--pub" data-reveal>
         <div class="ph ph--portrait" role="img" aria-label="Placeholder publication cover"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
         <div class="card__content">
-          <div class="card__meta"><span class="pill pill--pink">Article</span><span class="mono">May 2026</span></div>
-          <h3>Placeholder Headline That Is Fairly Long and Wraps</h3>
-          <p class="card__org">Placeholder Publication Name</p>
-          <p>Placeholder one-line summary of the piece and why it mattered.</p>
-          <a href="#" class="link-arrow">Read it</a>
-        </div>
-      </li>
-      <li class="card card--pub" data-reveal>
-        <div class="ph ph--portrait" role="img" aria-label="Placeholder publication cover"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
-        <div class="card__content">
-          <div class="card__meta"><span class="pill pill--violet">Essay</span><span class="mono">Jan 2026</span></div>
-          <h3>Placeholder Headline</h3>
-          <p class="card__org">Placeholder Publication Name</p>
-          <p>Placeholder one-line summary of the piece.</p>
-          <a href="#" class="link-arrow">Read it</a>
-        </div>
-      </li>
-      <li class="card card--pub" data-reveal>
-        <div class="ph ph--portrait" role="img" aria-label="Placeholder publication cover"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
-        <div class="card__content">
-          <div class="card__meta"><span class="pill pill--cyan">Research</span><span class="mono">Sep 2025</span></div>
-          <h3>Placeholder Paper Title</h3>
-          <p class="card__org">Placeholder Journal or Conference</p>
-          <p>Placeholder one-line summary of the piece.</p>
-          <a href="#" class="link-arrow">Read it</a>
+          <div class="card__meta"><span class="pill pill--cyan">Research</span><span class="mono">2026 (in preparation)</span></div>
+          <h3>FSCN1 overexpression in the proximal-inflammatory subtype of lung adenocarcinoma is subtype-intrinsic and not explained by arm-level 7p gain</h3>
+          <p class="card__org">Manuscript in preparation (Pollard A.L., Wilkerson M.D.)</p>
+          <p>Across 515 TCGA tumors, the subtype's key marker gene is turned up by tumor identity, not extra chromosome 7 copies.</p>
         </div>
       </li>
     </ul>
@@ -311,28 +278,28 @@
       <article class="card card--photo" data-reveal>
         <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
         <div class="card__content">
-          <div class="card__meta"><span class="mono">2025 — present</span></div>
-          <h3>Placeholder Leadership Role</h3>
-          <p class="card__org">Placeholder Organization</p>
-          <p>Placeholder sentence on the team, its size, and what you steered it toward.</p>
+          <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
+          <h3>Robot Team Co-Leader</h3>
+          <p class="card__org">Maret Botball Engineering Team</p>
+          <p>Lead a team building autonomous robots in C for national Botball competitions and mentor younger students; named Best Rookie Team.</p>
         </div>
       </article>
       <article class="card card--photo" data-reveal>
         <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
         <div class="card__content">
-          <div class="card__meta"><span class="mono">2024 — present</span></div>
-          <h3>Placeholder Leadership Role</h3>
-          <p class="card__org">Placeholder Organization</p>
-          <p>Placeholder sentence on the team, its size, and what you steered it toward.</p>
+          <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
+          <h3>Co-Leader</h3>
+          <p class="card__org">Maret Girls Who Code Club</p>
+          <p>Recruited 10 members and built a safe space for girls in STEM, teaching C and Python through engaging coding projects.</p>
         </div>
       </article>
       <article class="card card--photo" data-reveal>
         <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
         <div class="card__content">
-          <div class="card__meta"><span class="mono">2023 — 2024</span></div>
-          <h3>Placeholder Leadership Role</h3>
-          <p class="card__org">Placeholder Organization</p>
-          <p>Placeholder sentence on the team, its size, and what you steered it toward.</p>
+          <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
+          <h3>Co-Leader</h3>
+          <p class="card__org">Maret Makerspace Club</p>
+          <p>Run the student 3D printing and building group: created creativity competitions, certified students to 3D print, and recruited members.</p>
         </div>
       </article>
     </div>
@@ -347,39 +314,30 @@
 
     <div class="grid grid--2">
       <article class="card card--volunteer" data-reveal>
-        <div class="ph ph--square" role="img" aria-label="Placeholder organization logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="pic ph--square" loading="lazy" src="images/screenshot-2026-10-17-at-9.42.18-pm.png" width="502" height="530" alt="Placeholder organization logo">
         <div class="card__content">
-          <div class="card__meta"><span class="mono">2022 — present</span><span class="pill pill--lime">Ongoing</span></div>
-          <h3>Placeholder Volunteer Role</h3>
-          <p class="card__org">Placeholder Organization</p>
-          <p>Placeholder sentence on who you helped and how often. Add a number if you have one.</p>
+          <div class="card__meta"><span class="mono">2025 — present</span><span class="pill pill--lime">Ongoing</span></div>
+          <h3>Group Leader &amp; Student-to-Student Ambassador</h3>
+          <p class="card__org">Jewish Community Relations Council of Washington DC</p>
+          <p>Lead a student team facilitating interfaith dialogues at local schools, sharing my story to put a teenage face to Judaism.</p>
         </div>
       </article>
       <article class="card card--volunteer" data-reveal>
-        <div class="ph ph--square" role="img" aria-label="Placeholder organization logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="pic ph--square" loading="lazy" src="images/mfrog_3color-1.jpg" width="512" height="512" alt="Placeholder organization logo">
         <div class="card__content">
-          <div class="card__meta"><span class="mono">2024</span></div>
-          <h3>Placeholder Volunteer Role</h3>
-          <p class="card__org">Placeholder Organization</p>
-          <p>Placeholder sentence on who you helped and how often.</p>
+          <div class="card__meta"><span class="mono">2025 — present</span><span class="pill pill--lime">Ongoing</span></div>
+          <h3>Co-Leader, Maret Makerspace Club</h3>
+          <p class="card__org">Maret Middle School</p>
+          <p>teaching and certifying 15 middle school students how to 3D print in 2026-2027. Certified 15 students in 2025-2026. </p>
         </div>
       </article>
       <article class="card card--volunteer" data-reveal>
-        <div class="ph ph--square" role="img" aria-label="Placeholder organization logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+        <img class="pic ph--square" loading="lazy" src="images/screenshot-2026-10-17-at-9.54.34-pm.png" width="1284" height="1196" alt="Placeholder organization logo">
         <div class="card__content">
-          <div class="card__meta"><span class="mono">2023</span></div>
-          <h3>Placeholder Volunteer Role</h3>
-          <p class="card__org">Placeholder Organization</p>
-          <p>Placeholder sentence on who you helped and how often.</p>
-        </div>
-      </article>
-      <article class="card card--volunteer" data-reveal>
-        <div class="ph ph--square" role="img" aria-label="Placeholder organization logo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
-        <div class="card__content">
-          <div class="card__meta"><span class="mono">2023</span></div>
-          <h3>Placeholder Volunteer Role</h3>
-          <p class="card__org">Placeholder Organization</p>
-          <p>Placeholder sentence on who you helped and how often.</p>
+          <div class="card__meta"><span class="mono">2016 — present</span><span class="pill pill--lime">Ongoing</span></div>
+          <h3>Farmer, Project Manager</h3>
+          <p class="card__org">Ohana Valley Organic Farm, Potomac, MD</p>
+          <p>For 10 years, I've nurtured livestock, gathered eggs, cultivated crops, and kept up the fields and fences.</p>
         </div>
       </article>
     </div>
@@ -393,14 +351,14 @@
     </header>
 
     <ul class="facts">
-      <li class="fact fact--pink" data-reveal><span class="fact__emoji" aria-hidden="true">🎧</span><p>Placeholder fun fact about a hobby.</p></li>
-      <li class="fact fact--cyan" data-reveal><span class="fact__emoji" aria-hidden="true">🌮</span><p>Placeholder fun fact about food.</p></li>
-      <li class="fact fact--lime" data-reveal><span class="fact__emoji" aria-hidden="true">🏔️</span><p>Placeholder fun fact about a place.</p></li>
-      <li class="fact fact--yellow" data-reveal><span class="fact__emoji" aria-hidden="true">📚</span><p>Placeholder fun fact about a book.</p></li>
-      <li class="fact fact--violet" data-reveal><span class="fact__emoji" aria-hidden="true">🤖</span><p>Placeholder fun fact about a gadget.</p></li>
-      <li class="fact fact--pink" data-reveal><span class="fact__emoji" aria-hidden="true">🐾</span><p>Placeholder fun fact about a pet.</p></li>
-      <li class="fact fact--cyan" data-reveal><span class="fact__emoji" aria-hidden="true">🎮</span><p>Placeholder fun fact about a game.</p></li>
-      <li class="fact fact--lime" data-reveal><span class="fact__emoji" aria-hidden="true">☕</span><p>Placeholder fun fact about a routine.</p></li>
+      <li class="fact fact--pink" data-reveal><span class="fact__emoji" aria-hidden="true">🎧</span><p>Co-founded my school's Taylor Swift Club</p></li>
+      <li class="fact fact--cyan" data-reveal><span class="fact__emoji" aria-hidden="true">🍰</span><p>Avid baker</p></li>
+      <li class="fact fact--lime" data-reveal><span class="fact__emoji" aria-hidden="true">🌾</span><p>Help on my family's organic farm in Potomac since 2016</p></li>
+      <li class="fact fact--yellow" data-reveal><span class="fact__emoji" aria-hidden="true">📚</span><p>Just finished reading <em>The Invisible Life of Addie LaRue</em> by V.E. Schwab</p></li>
+      <li class="fact fact--violet" data-reveal><span class="fact__emoji" aria-hidden="true">🤖</span><p>Currently leading my team in modifying last year's Botball robot to earn 100x more points</p></li>
+      <li class="fact fact--pink" data-reveal><span class="fact__emoji" aria-hidden="true">🐾</span><p>Three dogs: Kona, Tillie, and Luna</p></li>
+      <li class="fact fact--cyan" data-reveal><span class="fact__emoji" aria-hidden="true">🥏</span><p>Ultimate Frisbee player for 3 years</p></li>
+      <li class="fact fact--lime" data-reveal><span class="fact__emoji" aria-hidden="true">🏃</span><p>Cross-country runner chasing 5K PRs</p></li>
     </ul>
   </section>
 
@@ -409,11 +367,11 @@
     <div class="contact__card" data-reveal>
       <p class="eyebrow eyebrow--light">// get in touch</p>
       <h2 id="contact-heading">Let's build something.</h2>
-      <p>Placeholder line inviting people to reach out — collaborations, questions, or just to say hi.</p>
+      <p>Please reach out if you are interested in a collaboration, or just want to say hi!</p>
       <div class="contact__links">
-        <a href="mailto:hello@example.com" class="btn btn--light">hello@example.com</a>
-        <a href="#" class="btn btn--outline-light">GitHub</a>
-        <a href="#" class="btn btn--outline-light">LinkedIn</a>
+        <a href="mailto:ariel@arielpollard.com" class="btn btn--light">ariel@arielpollard.com</a>
+        <a href="https://github.com/ariel-378" class="btn btn--outline-light">GitHub</a>
+        <a href="https://www.linkedin.com/in/arielpollard/" class="btn btn--outline-light">LinkedIn</a>
       </div>
     </div>
   </section>
