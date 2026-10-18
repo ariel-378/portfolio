@@ -1,0 +1,79 @@
+/* Op-ed pages under /writing. Shares tokens and the blurred photo background
+   with styles.css; this file only adds the reading layout. */
+
+.article {
+  max-width: 76ch;
+  margin: 0 auto;
+  padding: clamp(2rem, 1.5rem + 2.5vw, 4rem) var(--gutter) 3rem;
+}
+
+.article__back {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-bottom: 22px;
+  font-family: var(--font-head); font-weight: 700; font-size: 0.95rem;
+  color: var(--violet); text-decoration: none;
+}
+.article__back::before { content: "←"; transition: transform var(--dur-fast) var(--ease-out); }
+.article__back:hover::before { transform: translateX(-4px); }
+
+/* The paper itself: a frosted sheet with the same hard shadow as the cards. */
+.article__sheet {
+  background: rgba(255, 255, 255, 0.86);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 8px 8px 0 var(--pink);
+  padding: clamp(24px, 3vw + 12px, 52px);
+}
+
+.article__header { padding-bottom: 22px; margin-bottom: 28px; border-bottom: 2px solid var(--ink); }
+.article h1 {
+  font-size: clamp(1.75rem, 1.2rem + 2.4vw, 2.9rem);
+  margin-top: 12px;
+  text-wrap: balance;
+}
+.article__byline { color: var(--muted); font-weight: 500; margin: 12px 0 0; }
+
+.article__body { font-size: 1.06rem; line-height: 1.75; }
+.article__body p { margin: 0 0 1.3em; }
+.article__body p:last-child { margin-bottom: 0; }
+.article__body a {
+  color: var(--violet);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+.article__body a:hover { color: #BE185D; }
+
+.article__note {
+  margin: 30px 0 0; padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.9rem;
+}
+
+/* Newer / older links beneath the sheet. */
+.article__nav {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-top: 28px;
+}
+.article__nav-link {
+  display: grid; gap: 4px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 2px solid var(--ink); border-radius: var(--radius-sm);
+  color: var(--ink); text-decoration: none;
+  font-family: var(--font-head); font-weight: 700; font-size: 0.95rem; line-height: 1.3;
+  transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+}
+.article__nav-link:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--violet); }
+.article__nav-link--next { text-align: right; grid-column: 2; }
+.article__nav-link--prev { grid-column: 1; }
+
+/* Listing page: same compact rows as the home-page card, but linked. */
+.pub-list--index { margin-top: 0; }
+.pub-list--index li { padding: 12px 0; }
+.pub-list--index .pub-list__title { font-size: 1.05rem; }
+
+@media (max-width: 640px) {
+  .article__nav { grid-template-columns: 1fr; }
+  .article__nav-link--next { grid-column: 1; text-align: left; }
+}

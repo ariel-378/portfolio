@@ -383,11 +383,17 @@ img, svg { display: block; max-width: 100%; }
 .more p { margin-top: 8px; }
 
 /* Courses: badge on the left, text on the right. */
-.card--cert { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 20px; box-shadow: 6px 6px 0 var(--yellow); }
+/* Every course card is as tall as the tallest one, across rows too. */
+#courses .grid--3 { grid-auto-rows: 1fr; }
+.card--cert { display: grid; grid-template-columns: 56px 1fr; gap: 14px; padding: 16px; box-shadow: 6px 6px 0 var(--yellow); }
+.card--cert h3 { font-size: 1.05rem; }
+.card--cert .card__org { margin: 2px 0 6px; font-size: 0.92rem; }
 .card--cert:hover { box-shadow: 10px 10px 0 var(--yellow); }
 .card--cert .pill { margin-bottom: 8px; }
-.card--cert p:last-child { color: var(--muted); font-size: 0.95rem; }
-.cert__badge { width: 64px; border-radius: 16px; }
+.card--cert .card__meta { margin-bottom: 0; }
+.card--cert .card__meta .pill { margin-bottom: 8px; }
+.card--cert p:last-of-type { color: var(--muted); font-size: 0.95rem; }
+.cert__badge { width: 56px; border-radius: 14px; }
 
 /* Publications: full-width text cards; op-eds sit in a compact list. */
 .pubs { display: grid; gap: 22px; }
@@ -403,6 +409,13 @@ img, svg { display: block; max-width: 100%; }
 .pub-list li:first-child { border-top: 0; padding-top: 0; }
 .pub-list .mono { color: var(--muted); }
 .pub-list__title { font-weight: 500; }
+/* Titles link to the full text under /writing. */
+a.pub-list__title {
+  color: inherit; text-decoration: underline dotted var(--violet);
+  text-decoration-thickness: 1.5px; text-underline-offset: 4px;
+  transition: color var(--dur-fast);
+}
+a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet); text-decoration-style: solid; }
 
 /* Leadership: photo-topped cards. */
 .card--photo { overflow: hidden; box-shadow: 6px 6px 0 var(--cyan); }
@@ -609,3 +622,4 @@ body.has-splash .hero__copy > *, body.has-splash .terminal { animation-play-stat
   70%  { opacity: 1; }
   100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 24px)) scale(0.7) rotate(var(--spin)); }
 }
+
