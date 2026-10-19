@@ -14,6 +14,8 @@
   const HOLD_MIN_MS = 1500;
   const HOLD_MAX_MS = 2800;
   const UP_MS = 450;
+  const WAG_MIN_MS = 800;        /* a quick tap still wags the tail this long */
+  const LINGER_AFTER_TAP_MS = 1500; /* the dog waits this long after you let go before ducking */
   const DOG_WIDTH = 112;
   const DOG_HEIGHT = 86;
   const EDGE_INSET = 20;
@@ -65,6 +67,7 @@
       .join("");
     return `<svg class="peek__dog" data-dog="${dog.name}" viewBox="0 0 112 86" width="${DOG_WIDTH}" height="${DOG_HEIGHT}" aria-hidden="true">
       <defs><clipPath id="${clipId}"><ellipse cx="56" cy="44" rx="34" ry="31"/></clipPath></defs>
+      <path class="peek__tail" d="M78 66 Q92 56 94 38 Q96 26 103 23 Q109 28 104 42 Q100 60 86 70 Z" fill="${dog.ears[1]}" stroke="#14122B" stroke-width="2.5" stroke-linejoin="round"/>
       <g stroke="#14122B" stroke-width="2.5" stroke-linejoin="round">
         <ellipse cx="18" cy="44" rx="11" ry="20" fill="${dog.ears[0]}" transform="rotate(14 18 44)"/>
         <ellipse cx="94" cy="44" rx="11" ry="20" fill="${dog.ears[1]}" transform="rotate(-14 94 44)"/>
@@ -156,11 +159,33 @@
 
     const dog = window_.firstElementChild;
     dog.classList.add("peek__dog--up");
-    setTimeout(() => {
+    const duckDown = () => {
       dog.classList.remove("peek__dog--up");
       dog.classList.add("peek__dog--down");
       dog.addEventListener("animationend", () => window_.remove(), { once: true });
-    }, UP_MS + randomBetween(HOLD_MIN_MS, HOLD_MAX_MS));
+    };
+    let duckTimer = setTimeout(duckDown, UP_MS + randomBetween(HOLD_MIN_MS, HOLD_MAX_MS));
+
+    /* Press the dog and its tail wags for as long as you hold, and never for
+       less than a moment; it stays up a little after you let go. */
+    let pressedAt = 0;
+    let wagTimer = null;
+    dog.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      clearTimeout(duckTimer);
+      clearTimeout(wagTimer);
+      pressedAt = performance.now();
+      dog.classList.add("peek__dog--wag");
+    });
+    const release = () => {
+      if (!dog.classList.contains("peek__dog--wag")) return;
+      const remaining = Math.max(0, WAG_MIN_MS - (performance.now() - pressedAt));
+      clearTimeout(wagTimer);
+      wagTimer = setTimeout(() => dog.classList.remove("peek__dog--wag"), remaining);
+      clearTimeout(duckTimer);
+      duckTimer = setTimeout(duckDown, remaining + LINGER_AFTER_TAP_MS);
+    };
+    ["pointerup", "pointercancel", "pointerleave"].forEach((type) => dog.addEventListener(type, release));
   }
 
   function tick() {

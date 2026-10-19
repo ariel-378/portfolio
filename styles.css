@@ -297,6 +297,10 @@ img, svg { display: block; max-width: 100%; }
   animation: spin 28s linear infinite;
 }
 
+/* Shooting stars (stars.js) streak across the top of the hero on a canvas
+   behind the copy. Space makes them hop. */
+.stars { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
 /* Soft gradient blobs behind the hero. */
 .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.55; pointer-events: none; animation: drift 14s ease-in-out infinite; }
 .blob--pink { width: 420px; height: 420px; background: var(--pink); top: -140px; left: -120px; }
@@ -642,7 +646,13 @@ body.has-splash .hero__copy > *, body.has-splash .terminal { animation-play-stat
   display: block;
   translate: 0 100%;
   transform-origin: 50% 100%;
+  pointer-events: auto; cursor: pointer; touch-action: manipulation;
 }
+/* The tail pokes up beside the head and swings from its base. Press the dog
+   (peek.js adds --wag) and it wags. */
+.peek__tail { transform-origin: 82px 68px; }
+.peek__dog--wag .peek__tail { animation: peek-wag 160ms ease-in-out infinite alternate; }
+@keyframes peek-wag { from { transform: rotate(-28deg); } to { transform: rotate(22deg); } }
 .peek__dog--up {
   animation:
     peek-up 450ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
