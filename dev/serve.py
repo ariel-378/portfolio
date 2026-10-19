@@ -3,10 +3,10 @@
     python3 dev/serve.py [port]      # default 8000
 
 Serves the site from the repo root with caching disabled and injects the
-editor (dev/editor.js + dev/editor.css) into index.html. Text and image
-edits made in the browser are written straight back to index.html and
-images/. Binds to 127.0.0.1 only; the published site never includes any
-of this.
+editor (dev/editor.js + dev/editor.css) into every HTML page: the home page
+and each op-ed under writing/. Text and image edits made in the browser are
+written straight back to that page's file and images/. Binds to 127.0.0.1
+only; the published site never includes any of this.
 """
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ import threading
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from typing import Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import editlib  # noqa: E402
@@ -24,6 +25,7 @@ import editlib  # noqa: E402
 DEV_DIR = Path(__file__).resolve().parent
 ROOT = DEV_DIR.parent
 INDEX = ROOT / "index.html"
+NOT_EDITABLE_DIRS = {"dev", "node_modules", ".git"}
 IMAGES = ROOT / "images"
 DEFAULT_PORT = 8000
 MAX_BODY_BYTES = 20 * 1024 * 1024
@@ -35,23 +37,48 @@ BODY_INJECT = '<script src="/__editor/editor.js"></script>\n</body>'
 _write_lock = threading.Lock()
 
 
-def render_index() -> bytes:
-    source = INDEX.read_text(encoding="utf-8")
-    page = editlib.inject_ids(source)
-    page = page.replace("</head>", HEAD_INJECT, 1).replace("</body>", BODY_INJECT, 1)
-    return page.encode("utf-8")
+def resolve_page(url_path: str) -> Optional[Path]:
+    """The HTML file a request path refers to, or None if it is not an editable page.
+
+    ``/`` and ``/writing/`` mean that folder's index.html. Only ``.html`` files
+    inside the site root count, never anything under dev/ or outside the repo.
+    """
+    clean = url_path.split("?", 1)[0].split("#", 1)[0]
+    if clean.endswith("/"):
+        clean += "index.html"
+    if not clean.endswith(".html") or "\\" in clean:
+        return None
+    try:
+        target = (ROOT / clean.lstrip("/")).resolve()
+        relative = target.relative_to(ROOT)
+    except (ValueError, OSError):
+        return None
+    if relative.parts and relative.parts[0] in NOT_EDITABLE_DIRS:
+        return None
+    return target if target.is_file() else None
+
+
+def render_page(page: Path) -> bytes:
+    source = page.read_text(encoding="utf-8")
+    rendered = editlib.inject_ids(source)
+    rendered = rendered.replace("</head>", HEAD_INJECT, 1).replace("</body>", BODY_INJECT, 1)
+    return rendered.encode("utf-8")
 
 
 def apply_edit(payload: dict) -> None:
     index = payload.get("id")
     mode = payload.get("mode")
     fragment = payload.get("html")
+    page_url = payload.get("page", "/")
     if not isinstance(index, int) or mode not in ("inner", "outer") or not isinstance(fragment, str):
         raise editlib.EditError("Expected {id: int, mode: 'inner'|'outer', html: str}")
+    page = resolve_page(page_url) if isinstance(page_url, str) else None
+    if page is None:
+        raise editlib.EditError(f"Not an editable page: {page_url!r}")
     with _write_lock:
-        source = INDEX.read_text(encoding="utf-8")
+        source = page.read_text(encoding="utf-8")
         replace = editlib.replace_inner if mode == "inner" else editlib.replace_outer
-        INDEX.write_text(replace(source, index, fragment), encoding="utf-8")
+        page.write_text(replace(source, index, fragment), encoding="utf-8")
 
 
 def save_upload(payload: dict) -> str:
@@ -83,8 +110,9 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self) -> None:
         path = self.path.split("?", 1)[0]
-        if path in ("/", "/index.html"):
-            return self._send(HTTPStatus.OK, "text/html; charset=utf-8", render_index())
+        page = resolve_page(path)
+        if page is not None:
+            return self._send(HTTPStatus.OK, "text/html; charset=utf-8", render_page(page))
         if path in EDITOR_ASSETS:
             asset = DEV_DIR / EDITOR_ASSETS[path]
             kind = "text/javascript" if asset.suffix == ".js" else "text/css"
@@ -134,7 +162,7 @@ class Handler(SimpleHTTPRequestHandler):
 def main() -> None:
     port = int(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_PORT
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    print(f"Editing {INDEX.relative_to(ROOT)} at http://localhost:{port}/  (Ctrl+C to stop)")
+    print(f"Editing the site at http://localhost:{port}/  (every .html page, op-eds included; Ctrl+C to stop)")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

@@ -1,6 +1,7 @@
 // In-page editor. Injected by dev/serve.py; never part of the published site.
 // Click "Edit page", then click any text to retype it or any image to swap it.
-// Each change is written straight into index.html (and images/) by the server.
+// Each change is written straight into this page's HTML file (and images/) by
+// the server, whether that is index.html or an op-ed under writing/.
 (function () {
   "use strict";
 
@@ -68,7 +69,7 @@
     if (!active || active.el !== el || el.innerHTML === active.original) return;
     const html = el.children.length === 0 ? escapeHtml(el.textContent) : cleanClone(el).innerHTML;
     try {
-      await post("/__edit", { id: idOf(el), mode: "inner", html });
+      await post("/__edit", { page: location.pathname, id: idOf(el), mode: "inner", html });
       renumber(el, idOf(el), active.oldDesc, el.querySelectorAll("*").length, false);
       status("Saved");
     } catch (err) {
@@ -107,7 +108,7 @@
       const img = isImg ? cleanClone(target, false) : placeholderToImg(target);
       if (state.pendingFile) {
         const upload = await uploadFile(state.pendingFile);
-        img.setAttribute("src", upload.path);
+        img.setAttribute("src", pathFromThisPage(upload.path));
         img.setAttribute("width", upload.width);
         img.setAttribute("height", upload.height);
       } else if (!isImg) {
@@ -116,7 +117,7 @@
       img.setAttribute("alt", ui.alt.value.trim());
       const id = idOf(target);
       const oldDesc = target.querySelectorAll("*").length;
-      await post("/__edit", { id, mode: "outer", html: img.outerHTML });
+      await post("/__edit", { page: location.pathname, id, mode: "outer", html: img.outerHTML });
       target.replaceWith(img);
       renumber(img, id, oldDesc, 0, true);
       img.classList.add("__edit-img");
@@ -125,6 +126,13 @@
     } catch (err) {
       status(err.message, true);
     }
+  }
+
+  // The server stores uploads as "images/…" relative to the site root; a page
+  // in a subfolder (writing/) needs "../" in front for each level down.
+  function pathFromThisPage(rootRelative) {
+    const depth = location.pathname.split("/").filter(Boolean).length - (location.pathname.endsWith("/") ? 0 : 1);
+    return "../".repeat(Math.max(0, depth)) + rootRelative;
   }
 
   function placeholderToImg(ph) {
