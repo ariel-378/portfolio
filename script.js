@@ -1,5 +1,5 @@
 // Small page behaviors: scroll reveals, the typed terminal, the runaway
-// portrait, and click sparks. Everything degrades cleanly if JavaScript is off.
+// portrait that looks back at the cursor, and click sparks. Everything degrades cleanly if JavaScript is off.
 (function () {
   "use strict";
 
@@ -86,7 +86,8 @@
   // The hero portrait refuses to be touched. When the mouse gets close it
   // detaches from the layout, flees across the viewport (over any section),
   // slides along the edges when cornered, and dashes to the far side if it
-  // gets trapped. It springs home once the cursor backs off. Mouse-only;
+  // gets trapped. It springs home once the cursor backs off. While it is on
+  // the run it swaps to whichever photo faces the cursor. Mouse-only;
   // skipped under reduced motion.
   const avatar = document.querySelector(".avatar");
   const SAFE_DISTANCE = 200;     // px between cursor and portrait centre it insists on
@@ -104,6 +105,12 @@
   const RING_HUE_FAR = 330;      // hot pink
   const RING_LIGHT_HOME = 58;    // %
   const RING_LIGHT_FAR = 86;     // %
+  const LOOK_DIRECTIONS = [     // the photos she can swap to, as screen angles (0 = right, 90 = up)
+    { name: "right", angle: 0 }, { name: "up-right", angle: 45 }, { name: "up", angle: 90 },
+    { name: "up-left", angle: 135 }, { name: "left", angle: 180 }, { name: "down-left", angle: 225 },
+    { name: "down", angle: 270 }, { name: "down-right", angle: 315 },
+  ];
+  const LOOK_HYSTERESIS_DEG = 12; // a neighbouring photo must fit this much better before the eyes move
   const canHover = window.matchMedia("(hover: hover)").matches;
 
   if (avatar && canHover && !REDUCED_MOTION) {
@@ -113,6 +120,8 @@
     const placeholder = document.createElement("div");
     let isDetached = false;
     let frame = null;
+    const lookFrames = mountLookFrames(avatar.querySelector(".pic--avatar"));
+    let looking = null;             // the directional photo on show, or null for the straight-on one
 
     function detach() {
       const box = avatar.getBoundingClientRect();
@@ -133,6 +142,60 @@
     }
 
     function homeBox() { return (isDetached ? placeholder : avatar).getBoundingClientRect(); }
+
+    // ── Looking at the cursor ─────────────────────────────────────────────
+    // The directional photos come from data-look-* on the headshot <img>.
+    // Each is stacked over it, hidden, so switching is a class flip with no
+    // reload. A direction with no photo (down-left) borrows its nearest.
+    function mountLookFrames(img) {
+      if (!img) return [];
+      return LOOK_DIRECTIONS
+        .map(function (dir) { return { dir: dir, src: img.dataset["look" + pascalCase(dir.name)] }; })
+        .filter(function (f) { return Boolean(f.src); })
+        .map(function (f) {
+          const el = document.createElement("img");
+          el.className = "pic pic--avatar pic--look";
+          el.src = f.src; el.alt = "";
+          el.setAttribute("width", img.getAttribute("width")); el.setAttribute("height", img.getAttribute("height"));
+          el.setAttribute("aria-hidden", "true");
+          img.parentNode.appendChild(el);
+          return { name: f.dir.name, angle: f.dir.angle, el: el };
+        });
+    }
+
+    function pascalCase(name) {
+      return name.split("-").map(function (p) { return p[0].toUpperCase() + p.slice(1); }).join("");
+    }
+
+    function angularDistance(a, b) {
+      const d = Math.abs(a - b) % 360;
+      return d > 180 ? 360 - d : d;
+    }
+
+    // The photo that best faces `angle`. The current one is kept unless a
+    // neighbour is clearly better, so the eyes do not flicker on a boundary.
+    function pickLookFrame(angle, current) {
+      const best = lookFrames.reduce(function (acc, f) {
+        return angularDistance(f.angle, angle) < angularDistance(acc.angle, angle) ? f : acc;
+      });
+      const keepCurrent = current
+        && angularDistance(current.angle, angle) <= angularDistance(best.angle, angle) + LOOK_HYSTERESIS_DEG;
+      return keepCurrent ? current : best;
+    }
+
+    function lookAt(centerX, centerY) {
+      if (lookFrames.length === 0) return;
+      if (!cursor.inside) { showLook(null); return; }
+      const angle = (Math.atan2(centerY - cursor.y, cursor.x - centerX) * 180 / Math.PI + 360) % 360;
+      showLook(pickLookFrame(angle, looking));
+    }
+
+    function showLook(next) {
+      if (next === looking) return;
+      if (looking) looking.el.classList.remove("is-looking");
+      if (next) next.el.classList.add("is-looking");
+      looking = next;
+    }
 
     // Where the portrait wants to be this frame: clear of the cursor and on screen.
     function desiredOffset(home) {
@@ -188,6 +251,7 @@
       }
       avatar.style.setProperty("--tilt", tilt.toFixed(1) + "deg");
       paintOutline(Math.hypot(pos.x, pos.y));
+      lookAt(home.left + home.width / 2 + pos.x, home.top + home.height / 2 + pos.y);
 
       const atRest = !wanted.fleeing
         && Math.abs(vel.x) + Math.abs(vel.y) + Math.abs(pos.x) + Math.abs(pos.y) < REST_EPSILON;
@@ -195,6 +259,7 @@
         pos.x = 0; pos.y = 0;
         if (isDetached) reattach();
         avatar.style.setProperty("--tilt", "0deg");
+        showLook(null);
         frame = null;
         return;
       }
