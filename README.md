@@ -40,6 +40,6 @@ Every section ships with placeholder copy and dashed placeholder image boxes.
 | `peek.js` | One of Ariel’s dogs (Luna, Kona, Tillie) pops up from behind a random on-screen card every few seconds; timings and coat colours are constants at the top |
 | `shell.js` | The hero terminal accepts typed commands (`help`, `print()`, math) |
 | `writing/` | One page per Woodley Leaves op-ed, plus `index.html` listing them and `writing.css` for the reading layout. The home-page publication titles link here |
-| `stars.js` | Shooting stars streak across the top of the hero; pressing Space makes them hop (ignored while typing in the terminal) |
+| `stars.js` | Stars twinkle across the top of the hero; hold Space and they shine brighter the longer it is held (ignored while typing in the terminal) |
 | `splash.js` | Intro: the monogram builds from blocks and comes apart. Once per session; the letter pattern is at the top of the file |
 | `favicon.svg` | Tab icon |
