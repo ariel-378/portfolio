@@ -490,16 +490,18 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
 .footer__top { font-family: var(--font-mono); font-size: 0.82rem; text-decoration: none; color: var(--violet); }
 
 /* ── Intro splash ───────────────────────────────────────────────────────── */
+/* Shown by CSS from the first paint so the page never flashes before it;
+   splash.js (deferred) removes it at once when it should not play, and a
+   <noscript> rule hides it when JavaScript is off. */
 .splash {
   position: fixed; inset: 0; z-index: 200;
-  display: none; place-items: center;
+  display: grid; place-items: center;
   background-color: var(--bg);
   background-image: radial-gradient(circle, rgba(124, 58, 237, 0.14) 1px, transparent 1.4px);
   background-size: 22px 22px;
   transition: opacity 250ms var(--ease-out);
   cursor: pointer;
 }
-.splash.is-on { display: grid; }
 .splash.is-done { opacity: 0; pointer-events: none; }
 
 .splash__stage { display: grid; justify-items: center; gap: 22px; --blk: clamp(36px, 7vw, 54px); }

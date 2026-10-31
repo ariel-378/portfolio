@@ -16,14 +16,14 @@ Any static host works (GitHub Pages, Netlify drop).
 Every section ships with placeholder copy and dashed placeholder image boxes.
 
 - **Text** — search `index.html` for "Placeholder" and replace as you go.
-- **Portrait** — the hero headshot is `images/ariel-normal.jpg`. As the cursor
+- **Portrait** — the hero headshot is `images/ariel-normal.webp`. As the cursor
   moves, the portrait swaps to the photo facing the cursor, taken from the
   `data-look-*` attributes on that `<img>` (`up`, `down`, `left`, `right`,
   `up-left`, `up-right`, `down-left`, `down-right`, all 640×640). Any direction
   without a photo borrows its nearest neighbour.
 - **Images** — each placeholder is a `<div class="ph ph--16x9">` (or `--square`,
   `--portrait`, `--circle`, `--wide`). Swap the whole `div` for
-  `<img class="pic ph--16x9" src="images/project.png" alt="…">`: `pic` styles
+  `<img class="pic ph--16x9" src="images/project.webp" alt="…">`: `pic` styles
   a real image and the `ph--*` class keeps the slot's shape. Add `pic--logo`
   for a logo or seal so it is fitted rather than cropped. Files live in
   `images/`.

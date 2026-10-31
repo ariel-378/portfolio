@@ -24,8 +24,11 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css?v=2" />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" /></noscript>
+<link rel="stylesheet" href="styles.css?v=3" />
+<link rel="preload" as="image" href="images/ariel-normal.webp" />
+<noscript><style>.splash { display: none; }</style></noscript>
 </head>
 <body>
 
@@ -41,7 +44,7 @@
     <p class="splash__caption">// ariel.pollard</p>
   </div>
 </div>
-<script src="splash.js"></script>
+<script src="splash.js" defer></script>
 
 <!-- Reusable placeholder-image icon -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -80,11 +83,11 @@
 
       <div class="hero__visual">
         <div class="avatar">
-          <img class="pic pic--avatar" src="images/ariel-normal.jpg" alt="Headshot of Ariel Pollard" width="640" height="640"
-            data-look-up="images/ariel-up.jpg" data-look-down="images/ariel-down.jpg"
-            data-look-left="images/ariel-left.jpg" data-look-right="images/ariel-right.jpg"
-            data-look-up-left="images/ariel-up-left.jpg" data-look-up-right="images/ariel-up-right.jpg"
-            data-look-down-right="images/ariel-down-right.jpg">
+          <img class="pic pic--avatar" src="images/ariel-normal.webp" alt="Headshot of Ariel Pollard" width="640" height="640" fetchpriority="high"
+            data-look-up="images/ariel-up.webp" data-look-down="images/ariel-down.webp"
+            data-look-left="images/ariel-left.webp" data-look-right="images/ariel-right.webp"
+            data-look-up-left="images/ariel-up-left.webp" data-look-up-right="images/ariel-up-right.webp"
+            data-look-down-right="images/ariel-down-right.webp">
         </div>
         <div class="terminal" aria-label="Terminal card">
           <div class="terminal__bar"><span></span><span></span><span></span><em>ariel — zsh</em></div>
@@ -142,7 +145,7 @@
       </li>
 
       <li class="timeline__item" data-reveal>
-        <img class="timeline__logo pic pic--logo ph--square" src="images/sparks-logo.png" alt="SPARKS Book Club logo" width="600" height="600" loading="lazy">
+        <img class="timeline__logo pic pic--logo ph--square" src="images/sparks-logo.webp" alt="SPARKS Book Club logo" width="300" height="300" loading="lazy">
         <div class="timeline__body card">
           <div class="card__meta"><span class="mono">2020 — present</span><span class="pill pill--lime">Current</span></div>
           <h3>Co-Founder &amp; Student Leader</h3>
@@ -168,7 +171,7 @@
 
     <div class="bento">
       <article class="card card--project" data-reveal>
-        <img class="pic ph--16x9" loading="lazy" src="images/screenshot-2026-10-17-at-9.24.53-pm.png" width="2978" height="1714" alt="First Edition demo home page, styled as The Wildcat Times">
+        <img class="pic ph--16x9" loading="lazy" src="images/first-edition.webp" width="1200" height="691" alt="First Edition demo home page, styled as The Wildcat Times">
         <div class="card__content">
           <div class="card__meta"><span class="pill pill--pink">Featured</span><span class="mono">2026</span></div>
           <h3>First Edition</h3>
@@ -183,7 +186,7 @@
       </article>
 
       <article class="card card--project" data-reveal>
-        <img class="pic ph--16x9" loading="lazy" src="images/screenshot-2026-10-17-at-10.30.28-pm.png" width="2790" height="1492" alt="The Center Spread: The Woodley Leaves games section online">
+        <img class="pic ph--16x9" loading="lazy" src="images/center-spread.webp" width="1200" height="642" alt="The Center Spread: The Woodley Leaves games section online">
         <div class="card__content">
           <div class="card__meta"><span class="mono">2026</span></div>
           <h3>Woodley Leaves Center Spread</h3>
@@ -198,7 +201,7 @@
       </article>
 
       <article class="card card--project" data-reveal>
-        <img class="pic ph--16x9" loading="lazy" src="images/screenshot-2026-10-12-at-3.55.58-pm.png" width="2852" height="1682" alt="sparkslearning.org home page">
+        <img class="pic ph--16x9" loading="lazy" src="images/sparkslearning.webp" width="1200" height="708" alt="sparkslearning.org home page">
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025</span></div>
           <h3>sparkslearning.org</h3>
@@ -213,7 +216,7 @@
       </article>
 
       <article class="card card--project" data-reveal>
-        <img class="pic ph--16x9 pic--botball" src="images/botball.jpg" alt="Ariel adjusting the team's robot at the Botball competition" width="945" height="1400" loading="lazy">
+        <img class="pic ph--16x9 pic--botball" src="images/botball.webp" alt="Ariel adjusting the team's robot at the Botball competition" width="900" height="1333" loading="lazy">
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025</span></div>
           <h3>Maret Botball robots</h3>
@@ -391,7 +394,7 @@
 
     <div class="grid grid--2">
       <article class="card card--volunteer" data-reveal>
-        <img class="pic ph--square" loading="lazy" src="images/screenshot-2026-10-17-at-9.42.18-pm.png" width="502" height="530" alt="Jewish Community Relations Council of Greater Washington">
+        <img class="pic ph--square" loading="lazy" src="images/jcrc.webp" width="400" height="422" alt="Jewish Community Relations Council of Greater Washington">
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present</span><span class="pill pill--lime">Ongoing</span></div>
           <h3>Group Leader &amp; Student-to-Student Ambassador</h3>
@@ -400,7 +403,7 @@
         </div>
       </article>
       <article class="card card--volunteer" data-reveal>
-        <img class="pic ph--square" loading="lazy" src="images/screenshot-2026-10-17-at-9.54.34-pm.png" width="1284" height="1196" alt="Ariel on the family farm">
+        <img class="pic ph--square" loading="lazy" src="images/farm.webp" width="800" height="745" alt="Ariel on the family farm">
         <div class="card__content">
           <div class="card__meta"><span class="mono">2017 — present</span><span class="pill pill--lime">Ongoing</span></div>
           <h3>Farmhand</h3>

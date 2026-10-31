@@ -4,9 +4,11 @@
 // on small screens and when the browser asks to save data; any click or key
 // skips it.
 //
-// The splash is display:none until this adds .is-on, so with JavaScript off it
-// never covers the page. While it runs, <body> carries .has-splash, which holds
-// the hero's load-in animations; "splash-done" fires on document when it ends.
+// The overlay is shown by CSS from the first paint; this script, loaded with
+// defer, removes it at once when it should not play, and a <noscript> rule
+// hides it when JavaScript is off. While it runs, <body> carries .has-splash,
+// which holds the hero's load-in animations; "splash-done" fires on document
+// when it ends.
 (function () {
   "use strict";
 
@@ -72,7 +74,7 @@
 
   // ── Run the sequence ────────────────────────────────────────────────────
   document.body.classList.add("has-splash");
-  splash.classList.add("is-on", "is-building");
+  splash.classList.add("is-building");
 
   let isDone = false;
   function finish() {
