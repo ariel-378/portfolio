@@ -3,7 +3,8 @@
    gently on its own. Hold Space and every star shines brighter the longer the
    key is held, then settles back once it is released. Typing in the terminal
    (or any field) never triggers it. Twinkling is skipped under reduced
-   motion; the loop pauses while the hero is off screen or the tab is hidden. */
+   motion; narrow screens get fewer stars at 30 fps; the loop pauses while
+   the hero is off screen or the tab is hidden. */
 (() => {
   "use strict";
 
@@ -26,6 +27,9 @@
   const HALO_FULL = 5;              // soft halo radius, in star radii, at full shine
   const HALO_ALPHA = 0.55;
   const MAX_FRAME_S = 0.05;         // clamp a stalled tab's catch-up frame
+  const NARROW_PX = 900;            // below this width: half the stars, 30 fps
+  const NARROW_FRAME_MS = 1000 / 30;
+  const SHINE_KEY = "KeyS";         // S: free by default, unlike Space, which scrolls
   const COLOR_TOKENS = ["--pink", "--cyan", "--violet", "--yellow", "--lime"];
   const EDITABLE = "input, textarea, select, [contenteditable]";
 
@@ -44,6 +48,7 @@
   const easeOut = (t) => 1 - (1 - t) * (1 - t);
 
   let width = 0, height = 0;
+  let isNarrow = false;
   let stars = [];
   let charge = 0;                   // 0 at rest, 1 at full shine
   let isHeld = false;
@@ -54,6 +59,7 @@
   function resize() {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     width = hero.clientWidth; height = hero.clientHeight;
+    isNarrow = width < NARROW_PX;
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
@@ -61,7 +67,8 @@
   // Stars sit on a jittered grid across the strip so they spread out instead
   // of clumping. x is a fraction of the hero width, so a resize keeps the layout.
   function makeStars() {
-    const count = clamp(Math.round(width / PX_PER_STAR), MIN_STARS, MAX_STARS);
+    const perPx = isNarrow ? PX_PER_STAR * 2 : PX_PER_STAR;
+    const count = clamp(Math.round(width / perPx), MIN_STARS, MAX_STARS);
     return Array.from({ length: count }, (_, i) => ({
       fx: (i + rand(0.15, 0.85)) / count,
       y: rand(EDGE_INSET, BAND_HEIGHT - EDGE_INSET),
@@ -120,6 +127,10 @@
   }
 
   function step(now) {
+    if (isNarrow && lastFrame !== null && now - lastFrame < NARROW_FRAME_MS) {
+      frame = requestAnimationFrame(step);
+      return;
+    }
     const dt = lastFrame === null ? 0 : Math.min(MAX_FRAME_S, (now - lastFrame) / 1000);
     lastFrame = now;
     charge = advanceCharge(charge, dt);
@@ -148,21 +159,18 @@
     return box.bottom > 0 && box.top < window.innerHeight * 0.5;
   }
 
-  // Space: hold to brighten. The page keeps its scroll-on-space behaviour once
-  // the hero has left the screen, and typing into the terminal (or any field)
-  // is never hijacked. Auto-repeat keydowns are swallowed so holding the key
-  // does not scroll the page.
+  // S: hold to brighten. Only while the hero is on screen, and never while
+  // typing into the terminal (or any field). Space is left alone so keyboard
+  // users can still scroll with it.
   document.addEventListener("keydown", (event) => {
-    if (event.code !== "Space") return;
+    if (event.code !== SHINE_KEY || event.repeat) return;
     if (event.target instanceof Element && event.target.closest(EDITABLE)) return;
     if (!heroIsInView()) return;
-    event.preventDefault();
-    if (event.repeat) return;
     isHeld = true;
     start();
   });
   const release = () => { isHeld = false; start(); };
-  document.addEventListener("keyup", (event) => { if (event.code === "Space") release(); });
+  document.addEventListener("keyup", (event) => { if (event.code === SHINE_KEY) release(); });
   window.addEventListener("blur", release);
 
   if ("IntersectionObserver" in window) {
