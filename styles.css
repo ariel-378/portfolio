@@ -197,6 +197,13 @@ img, svg { display: block; max-width: 100%; }
 /* Real images in former placeholder slots. Pair with a ph--* shape class. */
 .pic { display: block; width: 100%; height: auto; object-fit: cover; border-radius: var(--radius-sm); border: 2px solid var(--ink); background: #fff; }
 .pic--logo { object-fit: contain; padding: 6px; }
+/* Text badge: a square tile that names an organization in place of its seal. */
+.badge {
+  display: grid; place-items: center; aspect-ratio: 1; padding: 5px; box-sizing: border-box;
+  border: 2px solid var(--ink); border-radius: var(--radius-sm); background: #fff; color: var(--ink);
+  font-family: var(--font-head); font-weight: 700; font-size: 0.68rem; line-height: 1.15;
+  text-align: center; letter-spacing: -0.01em; overflow-wrap: anywhere;
+}
 .pic--botball { object-position: 50% 58%; }
 .pic--avatar { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 50%; object-fit: cover; object-position: 50% 50%; }
 /* Extra portraits script.js stacks over the headshot, one per direction she
@@ -405,6 +412,7 @@ img, svg { display: block; max-width: 100%; }
 .card--cert .card__meta .pill { margin-bottom: 8px; }
 .card--cert p:last-of-type { color: var(--muted); font-size: 0.95rem; }
 .cert__badge { width: 56px; border-radius: 14px; }
+.badge.cert__badge { font-size: 0.6rem; padding: 4px; }
 
 /* Publications: full-width text cards; op-eds sit in a compact list. */
 .pubs { display: grid; gap: 22px; }
@@ -451,11 +459,11 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
 }
 .fact:hover { transform: translateY(-4px) rotate(-1deg); }
 .fact:nth-child(even):hover { transform: translateY(-4px) rotate(1deg); }
-/* Each fact leads with a small picture (a cartoon sticker or a photo). Until
-   one is chosen the slot is a dashed placeholder. */
+/* Each fact leads with a small picture: an emoji, or a photo if one is chosen. */
 .fact__pic { height: 88px; width: auto; max-width: 140px; object-fit: contain; border: 0; border-radius: 0; background: transparent; animation: bob 4.5s ease-in-out infinite; }
 .fact .ph.fact__pic { width: 72px; height: 72px; border: 2px dashed rgba(124, 58, 237, 0.45); border-radius: var(--radius-sm); background: linear-gradient(135deg, var(--violet-lt), var(--cyan-lt)); }
 .fact .ph.fact__pic::after { display: none; }
+.fact__emoji { display: grid; place-items: center; height: 88px; font-size: 3.4rem; line-height: 1; }
 .fact:nth-child(2n) .fact__pic { animation-delay: -1.2s; }
 .fact:nth-child(3n) .fact__pic { animation-delay: -2.4s; }
 .fact:nth-child(4n) .fact__pic { animation-delay: -3.3s; }
