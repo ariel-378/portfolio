@@ -5,28 +5,11 @@ A one-page personal portfolio. Plain HTML, CSS and JavaScript — no build step.
 ## Run it
 
 ```bash
-python3 dev/serve.py
+python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-Any static host works (GitHub Pages, Netlify drop). Plain `python3 -m http.server`
-also works, but the dev server above adds edit mode and turns off caching.
-
-## Edit it in the browser
-
-With `dev/serve.py` running, open any page (the home page or an op-ed under
-`writing/`) and click **Edit page** in the bottom-right corner:
-
-- **Text** — click any heading, paragraph, pill or link and retype it.
-  Enter saves, Esc cancels. Inline markup like the gradient `<span>` is kept.
-- **Images** — click any photo or dashed placeholder, choose a file and alt
-  text, then Save. The file is copied into `images/` and the placeholder is
-  swapped for a real `<img>` with the same shape class.
-
-Every save is written straight into that page's HTML file, so the change is already
-in the repo; commit when you are happy. Layout and colours still live in
-`styles.css`. The editor (`dev/`) is injected only by the dev server and never
-ships with the site. Tests: `python3 -m unittest dev/test_editlib.py`.
+Any static host works (GitHub Pages, Netlify drop).
 
 ## Fill it in
 
