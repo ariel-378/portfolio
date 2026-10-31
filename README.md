@@ -43,3 +43,5 @@ Every section ships with placeholder copy and dashed placeholder image boxes.
 | `stars.js` | Stars twinkle across the top of the hero; hold S and they shine brighter the longer it is held (ignored while typing in the terminal) |
 | `splash.js` | Intro: the monogram builds from blocks and comes apart, about 1.5 s. Once per session; skipped on small screens and with data saver; the letter pattern is at the top of the file |
 | `favicon.svg` | Tab icon |
+| `robots.txt`, `sitemap.xml` | Search-engine hints; add new pages to the sitemap |
+| `images/og.png` | 1200×630 preview card for shared links |
