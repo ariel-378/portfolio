@@ -3,7 +3,8 @@
    gently on its own. Hold Space and every star shines brighter the longer the
    key is held, then settles back once it is released. Typing in the terminal
    (or any field) never triggers it. Twinkling is skipped under reduced
-   motion; the loop pauses while the hero is off screen or the tab is hidden. */
+   motion; narrow screens get fewer stars at 30 fps; the loop pauses while
+   the hero is off screen or the tab is hidden. */
 (() => {
   "use strict";
 
@@ -20,12 +21,16 @@
   const TWINKLE_MAX_HZ = 0.55;
   const REST_ALPHA = 0.55;          // brightness at rest; the pulse swings around it
   const TWINKLE_DEPTH = 0.25;
-  const GLOW_REST = 8;              // px of blur behind a star at rest...
-  const GLOW_FULL = 40;             // ...and at full shine
+  const GLOW_REST = 2.6;            // glow radius in star radii at rest...
+  const GLOW_FULL = 5;              // ...and at full shine
+  const GLOW_ALPHA_REST = 0.35;
+  const GLOW_ALPHA_FULL = 0.6;
   const SCALE_FULL = 1.8;           // a star grows to this many times its size at full shine
-  const HALO_FULL = 5;              // soft halo radius, in star radii, at full shine
-  const HALO_ALPHA = 0.55;
+  const GLOW_SPRITE_PX = 64;        // each color's glow is drawn once to a small canvas and reused
   const MAX_FRAME_S = 0.05;         // clamp a stalled tab's catch-up frame
+  const NARROW_PX = 900;            // below this width: half the stars, 30 fps
+  const NARROW_FRAME_MS = 1000 / 30;
+  const SHINE_KEY = "KeyS";         // S: free by default, unlike Space, which scrolls
   const COLOR_TOKENS = ["--pink", "--cyan", "--violet", "--yellow", "--lime"];
   const EDITABLE = "input, textarea, select, [contenteditable]";
 
@@ -44,6 +49,7 @@
   const easeOut = (t) => 1 - (1 - t) * (1 - t);
 
   let width = 0, height = 0;
+  let isNarrow = false;
   let stars = [];
   let charge = 0;                   // 0 at rest, 1 at full shine
   let isHeld = false;
@@ -54,6 +60,7 @@
   function resize() {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     width = hero.clientWidth; height = hero.clientHeight;
+    isNarrow = width < NARROW_PX;
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
@@ -61,7 +68,8 @@
   // Stars sit on a jittered grid across the strip so they spread out instead
   // of clumping. x is a fraction of the hero width, so a resize keeps the layout.
   function makeStars() {
-    const count = clamp(Math.round(width / PX_PER_STAR), MIN_STARS, MAX_STARS);
+    const perPx = isNarrow ? PX_PER_STAR * 2 : PX_PER_STAR;
+    const count = clamp(Math.round(width / perPx), MIN_STARS, MAX_STARS);
     return Array.from({ length: count }, (_, i) => ({
       fx: (i + rand(0.15, 0.85)) / count,
       y: rand(EDGE_INSET, BAND_HEIGHT - EDGE_INSET),
@@ -91,35 +99,45 @@
     ctx.closePath();
   }
 
-  // The soft halo that blooms around a star as it charges up.
-  function drawHalo(x, y, radius, color, shine) {
-    const haloRadius = radius * HALO_FULL * shine;
-    if (haloRadius <= 0) return;
-    const halo = ctx.createRadialGradient(x, y, 0, x, y, haloRadius);
-    halo.addColorStop(0, color); halo.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.globalAlpha = HALO_ALPHA * shine;
-    ctx.fillStyle = halo;
-    ctx.beginPath(); ctx.arc(x, y, haloRadius, 0, Math.PI * 2); ctx.fill();
+  // A soft radial glow in one color, drawn once; every frame scales and
+  // fades this sprite instead of asking the canvas for a blur per star.
+  const glowSprites = new Map();
+  function glowSprite(color) {
+    if (glowSprites.has(color)) return glowSprites.get(color);
+    const sprite = document.createElement("canvas");
+    sprite.width = GLOW_SPRITE_PX; sprite.height = GLOW_SPRITE_PX;
+    const g = sprite.getContext("2d");
+    const r = GLOW_SPRITE_PX / 2;
+    const fill = g.createRadialGradient(r, r, 0, r, r, r);
+    fill.addColorStop(0, color); fill.addColorStop(0.3, color); fill.addColorStop(1, "rgba(255,255,255,0)");
+    g.fillStyle = fill; g.fillRect(0, 0, GLOW_SPRITE_PX, GLOW_SPRITE_PX);
+    glowSprites.set(color, sprite);
+    return sprite;
   }
 
   // At rest a star pulses around REST_ALPHA; as the shine builds, the pulse
-  // gives way to full brightness, a bigger body, a stronger glow and a halo.
+  // gives way to full brightness, a bigger body and a wider, stronger glow.
   function draw(star, seconds, shine) {
     const x = star.fx * width;
     const pulse = reducedMotion ? 0 : Math.sin(seconds * Math.PI * 2 * star.hz + star.phase) * TWINKLE_DEPTH;
     const alpha = clamp((REST_ALPHA + pulse) * (1 - shine) + shine, 0, 1);
     const radius = star.head * (1 + (SCALE_FULL - 1) * shine);
-    drawHalo(x, star.y, radius, star.color, shine);
+    const glow = radius * (GLOW_REST + (GLOW_FULL - GLOW_REST) * shine);
+    ctx.globalAlpha = (GLOW_ALPHA_REST + (GLOW_ALPHA_FULL - GLOW_ALPHA_REST) * shine) * alpha;
+    ctx.drawImage(glowSprite(star.color), x - glow, star.y - glow, glow * 2, glow * 2);
     ctx.globalAlpha = alpha;
-    ctx.shadowColor = star.color; ctx.shadowBlur = GLOW_REST + (GLOW_FULL - GLOW_REST) * shine;
     ctx.fillStyle = "#fff";
     ctx.strokeStyle = star.color; ctx.lineWidth = 1.2; ctx.lineJoin = "round";
     sparklePath(x, star.y, radius);
     ctx.fill(); ctx.stroke();
-    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+    ctx.globalAlpha = 1;
   }
 
   function step(now) {
+    if (isNarrow && lastFrame !== null && now - lastFrame < NARROW_FRAME_MS) {
+      frame = requestAnimationFrame(step);
+      return;
+    }
     const dt = lastFrame === null ? 0 : Math.min(MAX_FRAME_S, (now - lastFrame) / 1000);
     lastFrame = now;
     charge = advanceCharge(charge, dt);
@@ -148,21 +166,18 @@
     return box.bottom > 0 && box.top < window.innerHeight * 0.5;
   }
 
-  // Space: hold to brighten. The page keeps its scroll-on-space behaviour once
-  // the hero has left the screen, and typing into the terminal (or any field)
-  // is never hijacked. Auto-repeat keydowns are swallowed so holding the key
-  // does not scroll the page.
+  // S: hold to brighten. Only while the hero is on screen, and never while
+  // typing into the terminal (or any field). Space is left alone so keyboard
+  // users can still scroll with it.
   document.addEventListener("keydown", (event) => {
-    if (event.code !== "Space") return;
+    if (event.code !== SHINE_KEY || event.repeat) return;
     if (event.target instanceof Element && event.target.closest(EDITABLE)) return;
     if (!heroIsInView()) return;
-    event.preventDefault();
-    if (event.repeat) return;
     isHeld = true;
     start();
   });
   const release = () => { isHeld = false; start(); };
-  document.addEventListener("keyup", (event) => { if (event.code === "Space") release(); });
+  document.addEventListener("keyup", (event) => { if (event.code === SHINE_KEY) release(); });
   window.addEventListener("blur", release);
 
   if ("IntersectionObserver" in window) {

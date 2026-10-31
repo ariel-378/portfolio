@@ -1,5 +1,5 @@
-// Small page behaviors: scroll reveals, the typed terminal, the runaway
-// portrait that looks back at the cursor, and click sparks. Everything degrades cleanly if JavaScript is off.
+// Small page behaviors: scroll reveals, the typed terminal, the portrait
+// that looks at the cursor, and click sparks. Everything degrades cleanly if JavaScript is off.
 (function () {
   "use strict";
 
@@ -82,71 +82,34 @@
     terminalReady();
   }
 
-  // ── Avatar dodge ──────────────────────────────────────────────────────────
-  // The hero portrait refuses to be touched. When the mouse gets close it
-  // detaches from the layout, flees across the viewport (over any section),
-  // slides along the edges when cornered, and dashes to the far side if it
-  // gets trapped. It springs home once the cursor backs off. While it is on
-  // the run it swaps to whichever photo faces the cursor. Mouse-only;
-  // skipped under reduced motion.
+  // ── Portrait that looks at the cursor ─────────────────────────────────────
+  // The hero portrait stays put. When the mouse comes close to it, it swaps
+  // to whichever of the directional photos faces the cursor, with a little
+  // hysteresis so the eyes do not flicker on a boundary; the rest of the time
+  // the straight-on photo shows. The photos come from
+  // data-look-* on the headshot <img> and are mounted once the page has
+  // loaded, so they never compete with the first paint. Mouse-only; skipped
+  // under reduced motion.
   const avatar = document.querySelector(".avatar");
-  const SAFE_DISTANCE = 200;     // px between cursor and portrait centre it insists on
-  const TRAPPED_DISTANCE = 110;  // px: closer than this after clamping means it is cornered
-  const SPRING_STIFFNESS = 0.12;
-  const SPRING_DAMPING = 0.72;
-  const TILT_PER_PX = 0.5;       // deg of lean per px of horizontal speed
-  const TILT_MAX = 16;
-  const EDGE_MARGIN = 12;
-  const REST_EPSILON = 0.15;
-  const FLEEING_Z_INDEX = 60;
-  const GLOW_DISTANCE = 600;     // px from home at which the outline is at full blaze
-  const GLOW_MAX_BLUR = 40;      // px
-  const RING_HUE_HOME = 263;     // violet
-  const RING_HUE_FAR = 330;      // hot pink
-  const RING_LIGHT_HOME = 58;    // %
-  const RING_LIGHT_FAR = 86;     // %
   const LOOK_DIRECTIONS = [     // the photos she can swap to, as screen angles (0 = right, 90 = up)
     { name: "right", angle: 0 }, { name: "up-right", angle: 45 }, { name: "up", angle: 90 },
     { name: "up-left", angle: 135 }, { name: "left", angle: 180 }, { name: "down-left", angle: 225 },
     { name: "down", angle: 270 }, { name: "down-right", angle: 315 },
   ];
   const LOOK_HYSTERESIS_DEG = 12; // a neighbouring photo must fit this much better before the eyes move
+  const LOOK_REACH_PX = 40;       // the cursor must be within this many px of the portrait's edge
   const canHover = window.matchMedia("(hover: hover)").matches;
 
   if (avatar && canHover && !REDUCED_MOTION) {
-    const pos = { x: 0, y: 0 };     // offset from home, in px
-    const vel = { x: 0, y: 0 };
-    const cursor = { x: -9999, y: -9999, inside: false };
-    const placeholder = document.createElement("div");
-    let isDetached = false;
-    let frame = null;
-    const lookFrames = mountLookFrames(avatar.querySelector(".pic--avatar"));
+    const cursor = { x: 0, y: 0, inside: false };
+    let lookFrames = [];
     let looking = null;             // the directional photo on show, or null for the straight-on one
+    let center = null;              // the portrait's centre and radius in viewport px, measured once per scroll/resize
+    let frame = null;
 
-    function detach() {
-      const box = avatar.getBoundingClientRect();
-      placeholder.style.width = box.width + "px";
-      placeholder.style.height = box.height + "px";
-      avatar.parentNode.insertBefore(placeholder, avatar);
-      avatar.style.position = "fixed";
-      avatar.style.width = box.width + "px";
-      avatar.style.margin = "0";
-      avatar.style.zIndex = String(FLEEING_Z_INDEX);
-      isDetached = true;
-    }
-
-    function reattach() {
-      placeholder.remove();
-      ["position", "width", "margin", "zIndex", "left", "top"].forEach(function (p) { avatar.style[p] = ""; });
-      isDetached = false;
-    }
-
-    function homeBox() { return (isDetached ? placeholder : avatar).getBoundingClientRect(); }
-
-    // ── Looking at the cursor ─────────────────────────────────────────────
-    // The directional photos come from data-look-* on the headshot <img>.
-    // Each is stacked over it, hidden, so switching is a class flip with no
-    // reload. A direction with no photo (down-left) borrows its nearest.
+    // Each directional photo is stacked over the headshot, hidden, so
+    // switching is a class flip with no reload. A direction with no photo
+    // (down-left) borrows its nearest.
     function mountLookFrames(img) {
       if (!img) return [];
       return LOOK_DIRECTIONS
@@ -183,13 +146,6 @@
       return keepCurrent ? current : best;
     }
 
-    function lookAt(centerX, centerY) {
-      if (lookFrames.length === 0) return;
-      if (!cursor.inside) { showLook(null); return; }
-      const angle = (Math.atan2(centerY - cursor.y, cursor.x - centerX) * 180 / Math.PI + 360) % 360;
-      showLook(pickLookFrame(angle, looking));
-    }
-
     function showLook(next) {
       if (next === looking) return;
       if (looking) looking.el.classList.remove("is-looking");
@@ -197,96 +153,41 @@
       looking = next;
     }
 
-    // Where the portrait wants to be this frame: clear of the cursor and on screen.
-    function desiredOffset(home) {
-      const centerX = home.left + home.width / 2 + pos.x;
-      const centerY = home.top + home.height / 2 + pos.y;
-      const awayX = centerX - cursor.x;
-      const awayY = centerY - cursor.y;
-      const distance = Math.hypot(awayX, awayY) || 1;
-      if (!cursor.inside || distance > SAFE_DISTANCE) return { x: 0, y: 0, fleeing: false };
-      const push = SAFE_DISTANCE - distance;
-      return { x: pos.x + (awayX / distance) * push, y: pos.y + (awayY / distance) * push, fleeing: true };
+    function measure() {
+      const box = avatar.getBoundingClientRect();
+      return { x: box.left + box.width / 2, y: box.top + box.height / 2, radius: box.width / 2 };
     }
 
-    function clampToViewport(offset, home) {
-      const minX = EDGE_MARGIN - home.left;
-      const maxX = window.innerWidth - EDGE_MARGIN - home.width - home.left;
-      const minY = EDGE_MARGIN - home.top;
-      const maxY = window.innerHeight - EDGE_MARGIN - home.height - home.top;
-      return { x: Math.min(maxX, Math.max(minX, offset.x)), y: Math.min(maxY, Math.max(minY, offset.y)) };
+    // One update per animation frame, however many pointer events arrive.
+    function update() {
+      frame = null;
+      if (lookFrames.length === 0) return;
+      if (!cursor.inside) { showLook(null); return; }
+      if (center === null) center = measure();
+      const distance = Math.hypot(cursor.x - center.x, cursor.y - center.y);
+      if (distance > center.radius + LOOK_REACH_PX) { showLook(null); return; }
+      const angle = (Math.atan2(center.y - cursor.y, cursor.x - center.x) * 180 / Math.PI + 360) % 360;
+      showLook(pickLookFrame(angle, looking));
     }
 
-    // Cornered: jump to the spot on screen farthest from the cursor.
-    function escapeHatch(home) {
-      const farX = cursor.x < window.innerWidth / 2 ? window.innerWidth - EDGE_MARGIN - home.width : EDGE_MARGIN;
-      const farY = cursor.y < window.innerHeight / 2 ? window.innerHeight - EDGE_MARGIN - home.height : EDGE_MARGIN;
-      pos.x = farX - home.left; pos.y = farY - home.top;
-      vel.x = 0; vel.y = 0;
+    function scheduleUpdate() { if (frame === null) frame = requestAnimationFrame(update); }
+    function remeasure() { center = null; scheduleUpdate(); }
+
+    function mount() {
+      lookFrames = mountLookFrames(avatar.querySelector(".pic--avatar"));
+      scheduleUpdate();
     }
-
-    function step() {
-      const home = homeBox();
-      const wanted = desiredOffset(home);
-      const target = wanted.fleeing ? clampToViewport(wanted, home) : wanted;
-      if (wanted.fleeing && !isDetached) detach();
-
-      if (wanted.fleeing) {
-        // Fleeing is instant so a fast cursor can never catch it; only the
-        // return trip is springy.
-        vel.x = (target.x - pos.x) * 0.6; vel.y = (target.y - pos.y) * 0.6;
-        pos.x = target.x; pos.y = target.y;
-        const cx = home.left + home.width / 2 + pos.x, cy = home.top + home.height / 2 + pos.y;
-        if (Math.hypot(cx - cursor.x, cy - cursor.y) < TRAPPED_DISTANCE) escapeHatch(home);
-      } else {
-        vel.x = (vel.x + (target.x - pos.x) * SPRING_STIFFNESS) * SPRING_DAMPING;
-        vel.y = (vel.y + (target.y - pos.y) * SPRING_STIFFNESS) * SPRING_DAMPING;
-        pos.x += vel.x; pos.y += vel.y;
-      }
-
-      const tilt = Math.max(-TILT_MAX, Math.min(TILT_MAX, vel.x * TILT_PER_PX));
-      if (isDetached) {
-        avatar.style.left = (home.left + pos.x).toFixed(1) + "px";
-        avatar.style.top = (home.top + pos.y).toFixed(1) + "px";
-      }
-      avatar.style.setProperty("--tilt", tilt.toFixed(1) + "deg");
-      paintOutline(Math.hypot(pos.x, pos.y));
-      lookAt(home.left + home.width / 2 + pos.x, home.top + home.height / 2 + pos.y);
-
-      const atRest = !wanted.fleeing
-        && Math.abs(vel.x) + Math.abs(vel.y) + Math.abs(pos.x) + Math.abs(pos.y) < REST_EPSILON;
-      if (atRest) {
-        pos.x = 0; pos.y = 0;
-        if (isDetached) reattach();
-        avatar.style.setProperty("--tilt", "0deg");
-        showLook(null);
-        frame = null;
-        return;
-      }
-      frame = requestAnimationFrame(step);
-    }
-
-    // Outline brightness scales with distance from home: violet at rest,
-    // blazing pink-white with a glow when it has run far.
-    function paintOutline(distance) {
-      const t = Math.min(1, distance / GLOW_DISTANCE);
-      const hue = RING_HUE_HOME + (RING_HUE_FAR - RING_HUE_HOME) * t;
-      const light = RING_LIGHT_HOME + (RING_LIGHT_FAR - RING_LIGHT_HOME) * t;
-      avatar.style.setProperty("--ring", "hsl(" + hue.toFixed(0) + " 100% " + light.toFixed(0) + "%)");
-      avatar.style.setProperty("--glow", (GLOW_MAX_BLUR * t).toFixed(0) + "px");
-      avatar.style.setProperty("--glow-color", "hsl(" + hue.toFixed(0) + " 100% 70% / " + (0.9 * t).toFixed(2) + ")");
-    }
-
-    function wake() { if (frame === null) frame = requestAnimationFrame(step); }
 
     document.addEventListener("pointermove", function (event) {
       if (event.pointerType !== "mouse") return;
       cursor.x = event.clientX; cursor.y = event.clientY; cursor.inside = true;
-      wake();
+      scheduleUpdate();
     });
-    document.addEventListener("pointerleave", function () { cursor.inside = false; wake(); });
-    window.addEventListener("scroll", wake, { passive: true });
-    window.addEventListener("resize", wake);
+    document.addEventListener("pointerleave", function () { cursor.inside = false; scheduleUpdate(); });
+    window.addEventListener("scroll", remeasure, { passive: true });
+    window.addEventListener("resize", remeasure);
+    if (document.readyState === "complete") mount();
+    else window.addEventListener("load", mount, { once: true });
   }
 
   // ── Click sparks ──────────────────────────────────────────────────────────

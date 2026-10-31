@@ -197,6 +197,13 @@ img, svg { display: block; max-width: 100%; }
 /* Real images in former placeholder slots. Pair with a ph--* shape class. */
 .pic { display: block; width: 100%; height: auto; object-fit: cover; border-radius: var(--radius-sm); border: 2px solid var(--ink); background: #fff; }
 .pic--logo { object-fit: contain; padding: 6px; }
+/* Text badge: a square tile that names an organization in place of its seal. */
+.badge {
+  display: grid; place-items: center; aspect-ratio: 1; padding: 5px; box-sizing: border-box;
+  border: 2px solid var(--ink); border-radius: var(--radius-sm); background: #fff; color: var(--ink);
+  font-family: var(--font-head); font-weight: 700; font-size: 0.68rem; line-height: 1.15;
+  text-align: center; letter-spacing: -0.01em; overflow-wrap: anywhere;
+}
 .pic--botball { object-position: 50% 58%; }
 .pic--avatar { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 50%; object-fit: cover; object-position: 50% 50%; }
 /* Extra portraits script.js stacks over the headshot, one per direction she
@@ -244,13 +251,8 @@ img, svg { display: block; max-width: 100%; }
   width: clamp(140px, 18vw, 200px); aspect-ratio: 1; border-radius: 50%;
   background: #fff;
   border: 3px solid #fff;
-  /* --ring/--glow are set by script.js: the farther the portrait strays from
-     home, the brighter and hotter its outline burns. */
-  box-shadow: 0 0 0 3px var(--ring, var(--violet)), 0 0 var(--glow, 0px) var(--glow-color, transparent), 8px 8px 0 var(--yellow);
+  box-shadow: 0 0 0 3px var(--violet), 8px 8px 0 var(--yellow);
   animation: float 4s ease-in-out infinite;
-  /* Cursor dodge: script.js moves the portrait and leans it via --tilt. */
-  transform: rotate(var(--tilt, 0deg));
-  will-change: transform;
 }
 
 .terminal {
@@ -295,7 +297,7 @@ img, svg { display: block; max-width: 100%; }
 .avatar { overflow: visible; }
 .avatar::before {
   content: ""; position: absolute; inset: -16px; border-radius: 50%;
-  border: 2px dashed var(--ring, var(--violet)); opacity: 0.6;
+  border: 2px dashed var(--violet); opacity: 0.6;
   animation: spin 28s linear infinite;
 }
 
@@ -340,7 +342,7 @@ img, svg { display: block; max-width: 100%; }
 .card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
 .card__org { color: var(--muted); font-weight: 500; margin: 4px 0 10px; }
 .card h3 + p, .card p + p { margin-top: 8px; }
-.card__links { display: flex; gap: 18px; margin-top: 16px; }
+.card__links { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 16px; }
 .bullets { display: grid; gap: 6px; margin-top: 10px; padding-left: 1.1em; list-style: "✦ "; color: var(--ink); }
 .bullets li::marker { color: var(--pink); }
 
@@ -405,6 +407,7 @@ img, svg { display: block; max-width: 100%; }
 .card--cert .card__meta .pill { margin-bottom: 8px; }
 .card--cert p:last-of-type { color: var(--muted); font-size: 0.95rem; }
 .cert__badge { width: 56px; border-radius: 14px; }
+.badge.cert__badge { font-size: 0.6rem; padding: 4px; }
 
 /* Publications: full-width text cards; op-eds sit in a compact list. */
 .pubs { display: grid; gap: 22px; }
@@ -451,11 +454,11 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
 }
 .fact:hover { transform: translateY(-4px) rotate(-1deg); }
 .fact:nth-child(even):hover { transform: translateY(-4px) rotate(1deg); }
-/* Each fact leads with a small picture (a cartoon sticker or a photo). Until
-   one is chosen the slot is a dashed placeholder. */
+/* Each fact leads with a small picture: an emoji, or a photo if one is chosen. */
 .fact__pic { height: 88px; width: auto; max-width: 140px; object-fit: contain; border: 0; border-radius: 0; background: transparent; animation: bob 4.5s ease-in-out infinite; }
 .fact .ph.fact__pic { width: 72px; height: 72px; border: 2px dashed rgba(124, 58, 237, 0.45); border-radius: var(--radius-sm); background: linear-gradient(135deg, var(--violet-lt), var(--cyan-lt)); }
 .fact .ph.fact__pic::after { display: none; }
+.fact__emoji { display: grid; place-items: center; height: 88px; font-size: 3.4rem; line-height: 1; }
 .fact:nth-child(2n) .fact__pic { animation-delay: -1.2s; }
 .fact:nth-child(3n) .fact__pic { animation-delay: -2.4s; }
 .fact:nth-child(4n) .fact__pic { animation-delay: -3.3s; }
@@ -487,17 +490,21 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
 .footer__top { font-family: var(--font-mono); font-size: 0.82rem; text-decoration: none; color: var(--violet); }
 
 /* ── Intro splash ───────────────────────────────────────────────────────── */
+/* Shown by CSS from the first paint so the page never flashes before it;
+   splash.js (deferred) removes it at once when it should not play, and a
+   <noscript> rule hides it when JavaScript is off. The inline script in the
+   head adds .no-splash to <html> when the intro should not play at all. */
 .splash {
   position: fixed; inset: 0; z-index: 200;
-  display: none; place-items: center;
+  display: grid; place-items: center;
   background-color: var(--bg);
   background-image: radial-gradient(circle, rgba(124, 58, 237, 0.14) 1px, transparent 1.4px);
   background-size: 22px 22px;
-  transition: opacity 450ms var(--ease-out);
+  transition: opacity 250ms var(--ease-out);
   cursor: pointer;
 }
-.splash.is-on { display: grid; }
 .splash.is-done { opacity: 0; pointer-events: none; }
+.no-splash .splash { display: none; }
 
 .splash__stage { display: grid; justify-items: center; gap: 22px; --blk: clamp(36px, 7vw, 54px); }
 .splash__grid {
@@ -540,7 +547,7 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
 .blk--lime   { background: var(--lime); }
 .blk--yellow { background: var(--yellow); }
 .splash.is-building .blk { animation: blk-in 420ms var(--ease-out) var(--in-delay) both; }
-.splash.is-breaking .blk { animation: blk-out 820ms cubic-bezier(0.5, 0, 1, 0.5) var(--out-delay) both; }
+.splash.is-breaking .blk { animation: blk-out 600ms cubic-bezier(0.5, 0, 1, 0.5) var(--out-delay) both; }
 
 /* The page holds still behind the splash: no scrolling, and the hero's
    load-in waits so it isn't missed. */

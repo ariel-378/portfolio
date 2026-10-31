@@ -1,10 +1,14 @@
 // Intro splash: the monogram assembles from building blocks, holds, then comes
-// apart and scatters to reveal the page underneath. Plays once per browser
-// session, is skipped under reduced motion, and any click or key skips it.
+// apart and scatters to reveal the page underneath. About a second and a
+// half in all. Plays once per browser session; skipped under reduced motion,
+// on small screens and when the browser asks to save data; any click or key
+// skips it.
 //
-// The splash is display:none until this adds .is-on, so with JavaScript off it
-// never covers the page. While it runs, <body> carries .has-splash, which holds
-// the hero's load-in animations; "splash-done" fires on document when it ends.
+// The overlay is shown by CSS from the first paint; this script, loaded with
+// defer, removes it at once when it should not play, and a <noscript> rule
+// hides it when JavaScript is off. While it runs, <body> carries .has-splash,
+// which holds the hero's load-in animations; "splash-done" fires on document
+// when it ends.
 (function () {
   "use strict";
 
@@ -19,20 +23,23 @@
     "#...#",
     "#...#"
   ];
-  const BUILD_STEP_MS = 60;   // gap between one block landing and the next
+  const BUILD_STEP_MS = 25;   // gap between one block landing and the next
   const BUILD_MS = 420;       // one block's drop-in
-  const HOLD_MS = 700;        // finished monogram on screen
-  const BREAK_MS = 950;       // scatter, including the staggered delays
-  const FADE_MS = 450;        // overlay fade
+  const HOLD_MS = 300;        // finished monogram on screen
+  const BREAK_MS = 500;       // scatter, including the staggered delays
+  const FADE_MS = 250;        // overlay fade; matches the .splash transition
+  const MIN_VIEWPORT_PX = 600; // phones go straight to the page
 
   const splash = document.getElementById("splash");
   const grid = document.getElementById("splash-grid");
   if (!splash || !grid) return;
 
   const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isSmallScreen = window.innerWidth < MIN_VIEWPORT_PX;
+  const wantsSavedData = Boolean(navigator.connection && navigator.connection.saveData);
   let hasSeen = false;
   try { hasSeen = sessionStorage.getItem(SEEN_KEY) === "1"; } catch (e) { hasSeen = false; }
-  if (isReducedMotion || hasSeen) { splash.remove(); return; }
+  if (isReducedMotion || isSmallScreen || wantsSavedData || hasSeen) { splash.remove(); return; }
   try { sessionStorage.setItem(SEEN_KEY, "1"); } catch (e) { /* storage blocked: play every time */ }
 
   // ── Build the blocks, bottom row first, like stacking real ones ─────────
@@ -67,7 +74,7 @@
 
   // ── Run the sequence ────────────────────────────────────────────────────
   document.body.classList.add("has-splash");
-  splash.classList.add("is-on", "is-building");
+  splash.classList.add("is-building");
 
   let isDone = false;
   function finish() {
