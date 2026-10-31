@@ -27,8 +27,11 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
 <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" /></noscript>
 <link rel="stylesheet" href="styles.css?v=3" />
-<link rel="preload" as="image" href="images/ariel-normal.webp" />
+<link rel="preload" as="image" href="images/ariel-normal.webp" fetchpriority="high" />
 <noscript><style>.splash { display: none; }</style></noscript>
+<!-- Decide now, before the first paint, whether the intro plays; splash.js
+     applies the same rules when it runs. -->
+<script>(function () { try { var skip = window.innerWidth < 600 || window.matchMedia("(prefers-reduced-motion: reduce)").matches || sessionStorage.getItem("splash-seen") === "1" || (navigator.connection && navigator.connection.saveData); if (skip) document.documentElement.classList.add("no-splash"); } catch (e) { /* storage blocked: splash.js decides */ } })();</script>
 </head>
 <body>
 

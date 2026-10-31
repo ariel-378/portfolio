@@ -492,7 +492,8 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
 /* ── Intro splash ───────────────────────────────────────────────────────── */
 /* Shown by CSS from the first paint so the page never flashes before it;
    splash.js (deferred) removes it at once when it should not play, and a
-   <noscript> rule hides it when JavaScript is off. */
+   <noscript> rule hides it when JavaScript is off. The inline script in the
+   head adds .no-splash to <html> when the intro should not play at all. */
 .splash {
   position: fixed; inset: 0; z-index: 200;
   display: grid; place-items: center;
@@ -503,6 +504,7 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
   cursor: pointer;
 }
 .splash.is-done { opacity: 0; pointer-events: none; }
+.no-splash .splash { display: none; }
 
 .splash__stage { display: grid; justify-items: center; gap: 22px; --blk: clamp(36px, 7vw, 54px); }
 .splash__grid {
