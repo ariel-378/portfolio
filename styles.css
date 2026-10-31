@@ -232,7 +232,9 @@ img, svg { display: block; max-width: 100%; }
 .hero__copy > :nth-child(3) { animation-delay: 220ms; }
 .hero__copy > :nth-child(4) { animation-delay: 300ms; }
 .hero__copy > :nth-child(5) { animation-delay: 380ms; }
+.hero__copy > :nth-child(6) { animation-delay: 460ms; }
 .deck { font-size: 1.15rem; color: var(--muted); max-width: 52ch; margin-top: 20px; }
+.hero__about { max-width: 56ch; margin-top: 14px; line-height: 1.6; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .hero__pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
 
@@ -438,8 +440,10 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
 .card--volunteer .ph { border-radius: 18px; }
 
 /* Fun facts: chunky colored bubbles. */
-.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+/* Three to a row; a short last row sits centered instead of hugging the left. */
+.facts { --facts-gap: 18px; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--facts-gap); }
 .fact {
+  flex: 0 1 calc((100% - 2 * var(--facts-gap)) / 3);
   display: grid; gap: 10px; padding: 22px 20px;
   border-radius: 28px; border: 2px solid var(--ink);
   font-weight: 500;
@@ -448,7 +452,7 @@ a.pub-list__title:hover, a.pub-list__title:focus-visible { color: var(--violet);
 .fact:hover { transform: translateY(-4px) rotate(-1deg); }
 .fact:nth-child(even):hover { transform: translateY(-4px) rotate(1deg); }
 /* Each fact leads with a small picture (a cartoon sticker or a photo). Until
-   one is chosen the slot is a dashed placeholder the dev editor can fill. */
+   one is chosen the slot is a dashed placeholder. */
 .fact__pic { height: 88px; width: auto; max-width: 140px; object-fit: contain; border: 0; border-radius: 0; background: transparent; animation: bob 4.5s ease-in-out infinite; }
 .fact .ph.fact__pic { width: 72px; height: 72px; border: 2px dashed rgba(124, 58, 237, 0.45); border-radius: var(--radius-sm); background: linear-gradient(135deg, var(--violet-lt), var(--cyan-lt)); }
 .fact .ph.fact__pic::after { display: none; }
@@ -595,7 +599,8 @@ body.has-splash .hero__copy > *, body.has-splash .terminal { animation-play-stat
 }
 
 @media (max-width: 640px) {
-  .bento, .grid--2, .grid--3, .facts { grid-template-columns: 1fr; }
+  .bento, .grid--2, .grid--3 { grid-template-columns: 1fr; }
+  .fact { flex-basis: 100%; }
   .timeline::before { display: none; }
   .timeline__item { grid-template-columns: 1fr; gap: 12px; }
   .timeline__logo { width: 56px; }

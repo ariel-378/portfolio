@@ -51,8 +51,9 @@
     <div class="hero__inner">
       <div class="hero__copy">
         <p class="eyebrow">// hello, world</p>
-        <h1 id="hero-heading">Hi, I'm <span class="grad">Ariel</span>.<br>I'm a builder</h1>
+        <h1 id="hero-heading">Hi, I'm <span class="grad">Ariel</span><br>I'm a builder</h1>
         <p class="deck">Explore my portfolio (I built this too)!</p>
+        <p class="hero__about">Currently, I am researching potential characteristics of the Proximal-Inflammatory (previously <i>Squamoid</i>) subtype of Lung Adenocarcinoma using public datasets. When I'm not researching, I work to expand access to literature through my online book club and to journalism through my free school newspaper software.</p>
         <div class="hero__cta">
           <a href="#projects" class="btn btn--primary">See my work</a>
           <a href="#contact" class="btn btn--ghost">Say hello</a>
@@ -104,9 +105,9 @@
           <h3>Bioinformatics Intern</h3>
           <p class="card__org">Wilkerson Lab, Uniformed Services University / Walter Reed National Military Medical Center · Bethesda, MD</p>
           <ul class="bullets">
-            <li>Testing whether a common chromosome 7 gain drives the inflammation-active subtype of lung adenocarcinoma; showed its key marker gene is driven by tumor identity, not extra DNA copies.</li>
-            <li>Analyzed genomic data from 515 tumors in The Cancer Genome Atlas; first-author paper in preparation.</li>
-            <li>Selected as the lab's sole high school intern; wrote the full statistical pipeline in R.</li>
+            <li>Wrote the full statistical pipeline in R to test whether a common chromosome 7 gain drives the inflammation-active subtype of lung adenocarcinoma, across 515 tumors from The Cancer Genome Atlas.</li>
+            <li>Found that the subtype's key marker gene tracks tumor identity rather than extra DNA copies; first-author manuscript in preparation.</li>
+            <li>Selected as the lab's sole high school intern.</li>
           </ul>
           <ul class="chips" aria-label="Skills used"><li>R</li><li>Genomics</li><li>Statistics</li></ul>
         </div>
@@ -120,7 +121,7 @@
           <p class="card__org">The Woodley Leaves, Maret School · Washington, D.C. · Op-Ed Editor and staff writer before</p>
           <ul class="bullets">
             <li>Ran on a promise to rebuild the paper's website, then built it solo over summer 2026: an open-source site with an in-browser editor dashboard that runs behind any school's login.</li>
-            <li>123 commits and 1,151 automated tests; Maret approved it and asked Finalsite to deploy it. Published on GitHub and archived on Zenodo with a DOI, with a preprint describing the design.</li>
+            <li>Maret approved it and asked the school's web vendor to deploy it.</li>
             <li>Wrote and edited 30 op-eds as a writer and Op-Ed Editor; nine are collected below.</li>
           </ul>
           <ul class="chips" aria-label="Skills used"><li>Web dev</li><li>Git</li><li>Editing</li></ul>
@@ -161,7 +162,7 @@
           <p>An open-source school newspaper website with an in-browser editor dashboard that runs behind any school's login.</p>
           <details class="more">
             <summary><span class="more__open">Learn more</span><span class="more__close">Show less</span></summary>
-            <p>I built it solo over summer 2026 for The Woodley Leaves: 123 commits and 1,151 automated tests across 26 suites, a Lighthouse accessibility gate in CI, and a WordPress importer. Maret approved it and asked Finalsite to deploy it. Release 1.1.0 is archived on Zenodo (doi:10.5281/zenodo.23445561) and a preprint describes the design (doi:10.5281/zenodo.23455214).</p>
+            <p>I built it solo over summer 2026 for The Woodley Leaves. Plain HTML, CSS, and JavaScript with no build step; an editor dashboard that works behind any school's login; a WordPress importer; 1,151 automated tests across 26 suites and a Lighthouse accessibility gate in CI. The release and the preprint describing the design are cited under Publications.</p>
           </details>
           <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
           <div class="card__links"><a href="https://first-edition.dev" class="link-arrow">Live site</a><a href="https://github.com/ariel-378/First-Edition" class="link-arrow">Source</a></div>
@@ -283,14 +284,14 @@
           <div class="card__meta"><span class="pill pill--cyan">Research</span><span class="mono">2026 (in preparation)</span></div>
           <h3>FSCN1 overexpression in the proximal-inflammatory subtype of lung adenocarcinoma is subtype-intrinsic and not explained by arm-level 7p gain</h3>
           <p class="card__org">Manuscript in preparation (Pollard A.L., Wilkerson M.D.)</p>
-          <p>Across 515 TCGA tumors, the subtype's key marker gene is turned up by tumor identity, not extra chromosome 7 copies.</p>
+          <p>Across 515 TCGA tumors, the subtype's key marker gene tracks tumor identity rather than extra chromosome 7 copies.</p>
         </div>
       </li>
       <li class="card card--pub" data-reveal>
         <div class="card__content">
           <div class="card__meta"><span class="pill pill--pink">Op-Ed</span><span class="mono">2024 — 2026</span></div>
           <h3>Op-eds in The Woodley Leaves</h3>
-          <p class="card__org">Maret School’s student newspaper · Pollard, A.L.</p>
+          <p class="card__org">Maret School’s student newspaper · nine selected pieces</p>
           <ul class="pub-list">
           <li><span class="mono">2026</span><a class="pub-list__title" href="writing/intolerant-politics-in-scientific-research.html">“Intolerant Politics in Scientific Research Is Deadly”</a></li>
           <li><span class="mono">2025</span><a class="pub-list__title" href="writing/mamdani-social-media-strategy.html">“Mayor-Elect Mamdani’s Social Media Strategy Could Save the Democratic Party”</a></li>
@@ -312,21 +313,19 @@
   <section class="section" id="leadership" aria-labelledby="leadership-heading">
     <header class="section__head" data-reveal>
       <p class="eyebrow">// 05 — leadership</p>
-      <h2 id="leadership-heading">Teamwork and&nbsp;<span class="grad">Leadership</span></h2>
+      <h2 id="leadership-heading">Clubs and&nbsp;<span class="grad">Leadership</span></h2>
     </header>
 
     <div class="grid grid--3">
-      <article class="card card--photo" data-reveal>
-        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+      <article class="card" data-reveal>
         <div class="card__content">
           <div class="card__meta"><span class="mono">2026 — present · Op-Ed Editor 2025 · writer since 2023</span></div>
-          <h3>Online Editor-in-Chief</h3>
+          <h3>Web Editor-in-Chief</h3>
           <p class="card__org">The Woodley Leaves, Maret School's official student-run newspaper</p>
-          <p>Run the online edition: assign, edit, and publish stories and op-eds, and manage the editing team. Wrote and edited 30 op-eds before that as a writer and Op-Ed Editor.</p>
+          <p>Run the newspaper website; created a new website (see projects above); Edit, and publish stories and op-eds, and manage the editing team.</p>
         </div>
       </article>
-      <article class="card card--photo" data-reveal>
-        <img class="pic ph--16x9" loading="lazy" src="images/screenshot-2026-10-18-at-1.06.42-am.png" width="1934" height="1282" alt="Placeholder team photo">
+      <article class="card" data-reveal>
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
           <h3>Robot Team Co-Leader</h3>
@@ -334,8 +333,7 @@
           <p>Lead the team building autonomous robots in C for the national Botball competition and mentor younger students.</p>
         </div>
       </article>
-      <article class="card card--photo" data-reveal>
-        <img class="pic ph--16x9" loading="lazy" src="images/gwc_seo_logo.png" width="1200" height="630" alt="Placeholder team photo">
+      <article class="card" data-reveal>
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
           <h3>Co-Leader</h3>
@@ -343,17 +341,15 @@
           <p>Recruited 10 members, cultivated a safe space for girls in STEM, taught C and Python, and shared exciting, unconventional coding projects.</p>
         </div>
       </article>
-      <article class="card card--photo" data-reveal>
-        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+      <article class="card" data-reveal>
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present · member since 2023</span></div>
           <h3>Co-Leader</h3>
           <p class="card__org">Maret Makerspace Club, a student-led 3D printing and building group</p>
-          <p>Created makerspace creativity competitions, certified and taught students to 3D print, and recruited members.</p>
+          <p>Run creativity competitions and recruit members. Teach and certify 15 middle-school students a year to 3D print: 15 certified in 2025–26, the next 15 in progress.</p>
         </div>
       </article>
-      <article class="card card--photo" data-reveal>
-        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+      <article class="card" data-reveal>
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present</span></div>
           <h3>Co-Leader</h3>
@@ -361,8 +357,7 @@
           <p>Co-lead the club's meetings and keep a space where students share and workshop their writing.</p>
         </div>
       </article>
-      <article class="card card--photo" data-reveal>
-        <div class="ph ph--16x9" role="img" aria-label="Placeholder team photo"><svg class="ph__icon"><use href="#ph-icon"/></svg></div>
+      <article class="card" data-reveal>
         <div class="card__content">
           <div class="card__meta"><span class="mono">2025 — present</span></div>
           <h3>Co-Founder &amp; Leader</h3>
@@ -391,21 +386,12 @@
         </div>
       </article>
       <article class="card card--volunteer" data-reveal>
-        <img class="pic ph--square" loading="lazy" src="images/mfrog_3color-1.jpg" width="512" height="512" alt="Placeholder organization logo">
-        <div class="card__content">
-          <div class="card__meta"><span class="mono">2025 — present</span><span class="pill pill--lime">Ongoing</span></div>
-          <h3>Co-Leader, Maret Makerspace Club</h3>
-          <p class="card__org">Maret Middle School</p>
-          <p>Teach and certify 15 middle-school students a year to 3D print; 15 certified in 2025–26, the next 15 in progress.</p>
-        </div>
-      </article>
-      <article class="card card--volunteer" data-reveal>
         <img class="pic ph--square" loading="lazy" src="images/screenshot-2026-10-17-at-9.54.34-pm.png" width="1284" height="1196" alt="Placeholder organization logo">
         <div class="card__content">
-          <div class="card__meta"><span class="mono">2016 — present</span><span class="pill pill--lime">Ongoing</span></div>
+          <div class="card__meta"><span class="mono">2017 — present</span><span class="pill pill--lime">Ongoing</span></div>
           <h3>Farmhand</h3>
           <p class="card__org">Ohana Valley Organic Farm, Potomac, MD</p>
-          <p>For 10 years, I've nurtured livestock, gathered eggs, cultivated crops, and kept up the fields and fences.</p>
+          <p>For almost 10 years, I've nurtured livestock, gathered eggs, cultivated crops, and kept up the fields and fences.</p>
         </div>
       </article>
     </div>
@@ -419,7 +405,6 @@
     </header>
 
     <ul class="facts">
-      <li class="fact fact--lime" data-reveal><img class="fact__pic" src="images/fact-farm.png" alt="" width="165" height="320" loading="lazy"><p>Help on my family's organic farm</p></li>
       <li class="fact fact--yellow" data-reveal><img class="pic ph--square fact__pic" loading="lazy" src="images/pngtree-watercolor-library-book-clip-art-png-image_13391689.png" width="1200" height="1200" alt=""><p>Just finished reading <em>The Invisible Life of Addie LaRue</em> by V.E. Schwab</p></li>
       <li class="fact fact--violet" data-reveal><img class="pic ph--square fact__pic" loading="lazy" src="images/9017333.png" width="512" height="512" alt=""><p>Currently modifying last year's Botball robot to earn 100x more points</p></li>
       <li class="fact fact--pink" data-reveal><img class="pic ph--square fact__pic" loading="lazy" src="images/dog-drawing-outline-transparent-background-free-png.webp" width="980" height="980" alt=""><p>Three dogs: Kona, Tillie, and Luna (you might've seen them popping up!)</p></li>
