@@ -83,9 +83,10 @@
   }
 
   // ── Portrait that looks at the cursor ─────────────────────────────────────
-  // The hero portrait stays put. While the mouse is on the page it swaps to
-  // whichever of the directional photos faces the cursor, with a little
-  // hysteresis so the eyes do not flicker on a boundary. The photos come from
+  // The hero portrait stays put. When the mouse comes close to it, it swaps
+  // to whichever of the directional photos faces the cursor, with a little
+  // hysteresis so the eyes do not flicker on a boundary; the rest of the time
+  // the straight-on photo shows. The photos come from
   // data-look-* on the headshot <img> and are mounted once the page has
   // loaded, so they never compete with the first paint. Mouse-only; skipped
   // under reduced motion.
@@ -96,13 +97,14 @@
     { name: "down", angle: 270 }, { name: "down-right", angle: 315 },
   ];
   const LOOK_HYSTERESIS_DEG = 12; // a neighbouring photo must fit this much better before the eyes move
+  const LOOK_REACH_PX = 40;       // the cursor must be within this many px of the portrait's edge
   const canHover = window.matchMedia("(hover: hover)").matches;
 
   if (avatar && canHover && !REDUCED_MOTION) {
     const cursor = { x: 0, y: 0, inside: false };
     let lookFrames = [];
     let looking = null;             // the directional photo on show, or null for the straight-on one
-    let center = null;              // the portrait's centre in viewport px, measured once per scroll/resize
+    let center = null;              // the portrait's centre and radius in viewport px, measured once per scroll/resize
     let frame = null;
 
     // Each directional photo is stacked over the headshot, hidden, so
@@ -153,7 +155,7 @@
 
     function measure() {
       const box = avatar.getBoundingClientRect();
-      return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+      return { x: box.left + box.width / 2, y: box.top + box.height / 2, radius: box.width / 2 };
     }
 
     // One update per animation frame, however many pointer events arrive.
@@ -162,6 +164,8 @@
       if (lookFrames.length === 0) return;
       if (!cursor.inside) { showLook(null); return; }
       if (center === null) center = measure();
+      const distance = Math.hypot(cursor.x - center.x, cursor.y - center.y);
+      if (distance > center.radius + LOOK_REACH_PX) { showLook(null); return; }
       const angle = (Math.atan2(center.y - cursor.y, cursor.x - center.x) * 180 / Math.PI + 360) % 360;
       showLook(pickLookFrame(angle, looking));
     }
