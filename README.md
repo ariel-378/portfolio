@@ -39,6 +39,7 @@ Every section ships with placeholder copy and dashed placeholder image boxes.
 | `script.js` | Scroll-reveal, terminal typing, the portrait that looks toward the cursor, click sparks |
 | `peek.js` | One of Ariel’s dogs (Luna, Kona, Tillie) pops up from behind a random on-screen card every few seconds; timings and coat colours are constants at the top |
 | `shell.js` | The hero terminal accepts typed commands (`help`, `print()`, math) |
+| `notes/` | Short technical notes; `why-no-build-step.html` is the first |
 | `writing/` | One page per Woodley Leaves op-ed, plus `index.html` listing them and `writing.css` for the reading layout. The home-page publication titles link here |
 | `stars.js` | Stars twinkle across the top of the hero; hold S and they shine brighter the longer it is held (ignored while typing in the terminal) |
 | `splash.js` | Intro: the monogram builds from blocks and comes apart, about 1.5 s. Once per session; skipped on small screens and with data saver; the letter pattern is at the top of the file |

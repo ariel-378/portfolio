@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Why First Edition has no build step — Ariel Pollard</title>
+<meta name="description" content="A short technical note by Ariel Pollard on why First Edition, an open-source newspaper platform, has no build step and no dependencies: what that cost, what it bought, and how 1,151 tests stand in for a framework." />
+<link rel="canonical" href="https://arielpollard.com/notes/why-no-build-step.html" />
+<meta property="og:title" content="Why First Edition has no build step" />
+<meta property="og:description" content="What a zero-dependency newspaper platform cost, what it bought, and how 1,151 tests and a Lighthouse gate stand in for a framework." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://arielpollard.com/notes/why-no-build-step.html" />
+<link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" /></noscript>
+<link rel="stylesheet" href="../styles.css?v=3" />
+<link rel="stylesheet" href="../writing/writing.css" />
+</head>
+<body class="page--article">
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<main id="main-content" class="article">
+  <a class="article__back" href="../index.html#projects">Back to the portfolio</a>
+
+  <article class="article__sheet">
+    <header class="article__header">
+      <div class="card__meta"><span class="pill pill--cyan">Technical note</span><span class="mono">October 2026</span></div>
+      <h1>Why First Edition has no build step</h1>
+      <p class="article__byline">By Ariel Pollard</p>
+    </header>
+    <div class="article__body">
+    <p>Every school newspaper website has the same maintenance problem, and no commercial platform is built to solve it: the people who run it leave every June. The editor who picked the theme and knows which plugin breaks the home page graduates, and the sophomore who inherits the login inherits none of the knowledge. I became the online editor of The Woodley Leaves in the spring of 2026, and the question I kept asking while planning the rebuild was not “what is the best stack” but “what will still work in 2029, when nobody here remembers me.”</p>
+    <p>That question decided the architecture. <a href="https://github.com/ariel-378/First-Edition">First Edition</a> is a complete newspaper site with an editor dashboard, written in plain HTML, CSS and JavaScript. There is no framework, no bundler, no package to install and no server of its own. The whole deployable thing is a folder of files, served exactly as they sit in the repository. The one command in the project, <code>npm test</code>, exists for people changing the code; the site does not know it is there.</p>
+    <p><strong>What it cost.</strong> Choosing the least technology is not free, and I would rather say so than pretend. There is no component model, so shared markup like the masthead and the article cards is written by small scripts that put HTML strings into known containers, and every editor-supplied string passes through one escaping helper on the way out. There is no database: an editor's work lives in the browser's storage and reaches readers only through an explicit publish step that writes one file. There is no template engine, so the generated story pages live a directory below the root and every URL built at runtime has to account for that; this produced five separate bugs before I wrote the rule down and a test for it. And because the pages render in the browser, the first release had a cumulative layout shift of 0.5 to 0.9 as the masthead and cards drew in after the HTML arrived. That was an honest cost of the design as first implemented. Version 1.1.0 fixed it without abandoning the design, and the three audited pages now score 100 across the board on desktop.</p>
+    <p><strong>What it bought.</strong> Readability by the next editor: the stack is the only one a sixteen-year-old can learn from the page source alone, and every file in the site is what was written. Nothing to rot: no dependency to patch after a security advisory, no <code>node_modules</code> to rebuild when a laptop is replaced, no framework release train. A deploy that is “upload the folder,” which GitHub Pages does on every push and any static host does by copying files. And a seam for the school's own platform: the site never authenticates anyone. It reads one object the host injects and treats group membership on the host's side as the authorization, so the paper gets school-account login without running an identity system.</p>
+    <p><strong>How 1,151 tests stand in for a framework.</strong> A framework gives you conventions and a type system that catch some mistakes before a user does. Without one, the tests have to carry that weight, so they were built to test what a user would notice rather than how the code is organized. All 26 suites load the real pages into jsdom and drive them the way an editor or reader would: clicking buttons, typing into fields, publishing a story with a photo and opening it in a stranger's browser. Most suites grew out of a bug that shipped unnoticed because it broke only on a path nobody had clicked; the crossword suite exists because a reader's first click once sent their answer for 1 Across down the column. Two rules keep the suite honest: no test may assume articles exist, because a school's deployment may ship none, and every regression test is verified by reintroducing the bug and watching it go red. In CI, a Lighthouse gate fails the build if accessibility drops below 95 or performance below 90, so the two things a volunteer newsroom cannot tune by hand are checked on every push.</p>
+    <p>Whether a future student actually finds the code learnable is a question I cannot answer yet. But the design makes it answerable: there is one command, one per-school file, one development dependency, and about 19,600 lines whose every file is served as written. The full report, with the measurements and the limitations, is the preprint: Pollard, A.L. (2026). <em>First Edition: A Zero-Build Publishing Platform for Student Newspapers.</em> Zenodo. <a href="https://doi.org/10.5281/zenodo.23455214">doi:10.5281/zenodo.23455214</a>. The code is on <a href="https://github.com/ariel-378/First-Edition">GitHub</a> under the MIT license.</p>
+    </div>
+  </article>
+</main>
+
+<footer class="footer">
+  <p><span class="mono">© 2026 Ariel Pollard</span> · Built by hand with HTML, CSS, and a little JavaScript · <a href="https://github.com/ariel-378/portfolio">Source</a></p>
+  <a href="../index.html" class="footer__top">Back to the portfolio ↑</a>
+</footer>
+
+</body>
+</html>

@@ -342,7 +342,7 @@ img, svg { display: block; max-width: 100%; }
 .card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
 .card__org { color: var(--muted); font-weight: 500; margin: 4px 0 10px; }
 .card h3 + p, .card p + p { margin-top: 8px; }
-.card__links { display: flex; gap: 18px; margin-top: 16px; }
+.card__links { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 16px; }
 .bullets { display: grid; gap: 6px; margin-top: 10px; padding-left: 1.1em; list-style: "✦ "; color: var(--ink); }
 .bullets li::marker { color: var(--pink); }
 
